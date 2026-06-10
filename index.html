@@ -2,1098 +2,434 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Two Rivers Merge — Design Education on Country</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<title>DIT 7–10 Neural Map — Two Rivers Merge</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
 <style>
-:root{--earth:#3D2810;--ochre:#C17F24;--sand:#E8D5B0;--moss:#2D5016;--water:#1A5C6E;--sky:#A8C8D8;--smoke:#F5F0E8;--dark:#1A1208;--mid:#6B4C2A;--light:#FAF6EF;--accent:#C17F24;}
 *{box-sizing:border-box;margin:0;padding:0;}
-html{scroll-behavior:smooth;}
-body{font-family:'DM Sans',sans-serif;background:var(--light);color:var(--dark);font-weight:300;line-height:1.7;}
-
-/* NAV */
-nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:18px 48px;background:rgba(26,18,8,0.93);backdrop-filter:blur(12px);border-bottom:1px solid rgba(193,127,36,0.2);}
-.nav-logo{font-family:'Playfair Display',serif;font-size:15px;color:var(--sand);letter-spacing:0.04em;}
-.nav-logo span{color:var(--ochre);}
-.nav-links{display:flex;gap:36px;list-style:none;}
-.nav-links a{font-size:12px;font-weight:400;color:rgba(232,213,176,0.65);text-decoration:none;letter-spacing:0.08em;text-transform:uppercase;transition:color 0.2s;}
-.nav-links a:hover{color:var(--ochre);}
-
-/* HERO */
-.hero{min-height:100vh;background:var(--dark);position:relative;display:flex;align-items:center;overflow:hidden;}
-.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 70% 50%,rgba(26,92,110,0.25) 0%,transparent 60%),radial-gradient(ellipse 60% 80% at 20% 80%,rgba(45,80,22,0.3) 0%,transparent 50%),radial-gradient(ellipse 40% 40% at 80% 20%,rgba(193,127,36,0.12) 0%,transparent 50%);}
-.ripple{position:absolute;border-radius:50%;border:1px solid rgba(193,127,36,0.07);animation:ripple-out 8s ease-out infinite;}
-.ripple:nth-child(1){width:300px;height:300px;top:60%;left:65%;animation-delay:0s;}
-.ripple:nth-child(2){width:600px;height:620px;top:50%;left:60%;animation-delay:2.5s;}
-.ripple:nth-child(3){width:950px;height:950px;top:40%;left:55%;animation-delay:5s;}
-@keyframes ripple-out{0%{transform:translate(-50%,-50%) scale(0.6);opacity:0.5;}100%{transform:translate(-50%,-50%) scale(1.4);opacity:0;}}
-.hero-content{position:relative;z-index:2;max-width:700px;padding:120px 80px 80px;animation:fade-up 1.2s ease both;}
-@keyframes fade-up{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
-.hero-eyebrow{font-size:11px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:var(--ochre);margin-bottom:20px;}
-.hero-title{font-family:'Playfair Display',serif;font-size:clamp(42px,6vw,72px);line-height:1.08;color:var(--sand);margin-bottom:28px;}
-.hero-title em{font-style:italic;color:var(--ochre);}
-.hero-body{font-size:17px;color:rgba(232,213,176,0.72);max-width:520px;margin-bottom:48px;font-weight:300;}
-.hero-actions{display:flex;gap:16px;flex-wrap:wrap;}
-.btn-primary{display:inline-block;padding:14px 32px;background:var(--ochre);color:var(--dark);font-size:13px;font-weight:500;letter-spacing:0.06em;text-decoration:none;border-radius:2px;transition:background 0.2s,transform 0.15s;}
-.btn-primary:hover{background:var(--sand);transform:translateY(-2px);}
-.btn-ghost{display:inline-block;padding:14px 32px;border:1px solid rgba(232,213,176,0.3);color:var(--sand);font-size:13px;font-weight:400;letter-spacing:0.06em;text-decoration:none;border-radius:2px;transition:border-color 0.2s,color 0.2s;}
-.btn-ghost:hover{border-color:var(--ochre);color:var(--ochre);}
-.hero-scroll{position:absolute;bottom:36px;left:80px;display:flex;align-items:center;gap:10px;color:rgba(232,213,176,0.3);font-size:11px;letter-spacing:0.1em;text-transform:uppercase;}
-.scroll-line{width:40px;height:1px;background:rgba(193,127,36,0.35);}
-
-/* SECTIONS */
-section{padding:100px 80px;}
-.section-inner{max-width:1100px;margin:0 auto;}
-.section-eyebrow{font-size:11px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:var(--ochre);margin-bottom:16px;}
-.section-title{font-family:'Playfair Display',serif;font-size:clamp(30px,4vw,48px);line-height:1.15;color:var(--earth);margin-bottom:24px;}
-.section-body{font-size:16px;color:var(--mid);max-width:640px;font-weight:300;}
-
-/* WHY */
-.why{background:var(--smoke);}
-.why-grid{display:grid;grid-template-columns:1fr 1fr;gap:72px;margin-top:64px;align-items:start;}
-.why-pillar{position:relative;padding-top:24px;border-top:2px solid var(--ochre);}
-.why-pillar-num{position:absolute;top:-28px;font-family:'Playfair Display',serif;font-size:64px;color:rgba(193,127,36,0.1);font-weight:700;line-height:1;user-select:none;}
-.why-pillar h3{font-family:'Playfair Display',serif;font-size:22px;color:var(--earth);margin-bottom:12px;}
-.why-pillar p{font-size:15px;color:var(--mid);line-height:1.75;font-weight:300;}
-
-/* SYLLABUS */
-.syllabus-banner{background:var(--earth);padding:64px 80px;}
-.syllabus-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;}
-.syllabus-text .section-title{color:var(--sand);}
-.syllabus-text .section-body{color:rgba(232,213,176,0.68);}
-.syllabus-outcomes{display:flex;flex-direction:column;gap:10px;}
-.outcome-pill{display:flex;align-items:center;gap:12px;padding:10px 14px;background:rgba(232,213,176,0.05);border:1px solid rgba(193,127,36,0.18);border-radius:3px;transition:background 0.2s;}
-.outcome-pill:hover{background:rgba(232,213,176,0.09);}
-.outcome-code{font-size:10px;font-weight:500;letter-spacing:0.06em;color:var(--ochre);white-space:nowrap;min-width:84px;}
-.outcome-desc{font-size:13px;color:rgba(232,213,176,0.62);font-weight:300;}
-
-/* HOW */
-.approach{background:var(--light);}
-.approach-steps{margin-top:64px;display:grid;grid-template-columns:repeat(3,1fr);gap:2px;}
-.step{background:var(--smoke);padding:40px 34px;position:relative;overflow:hidden;transition:background 0.2s;}
-.step:hover{background:#EDE8DF;}
-.step::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--ochre);transform:scaleX(0);transform-origin:left;transition:transform 0.3s ease;}
-.step:hover::before{transform:scaleX(1);}
-.step-num{font-family:'Playfair Display',serif;font-size:48px;color:rgba(193,127,36,0.18);font-weight:700;line-height:1;margin-bottom:20px;}
-.step h3{font-family:'Playfair Display',serif;font-size:19px;color:var(--earth);margin-bottom:12px;}
-.step p{font-size:14px;color:var(--mid);font-weight:300;line-height:1.75;}
-
-/* PROTOCOLS */
-.protocol{background:var(--moss);padding:60px 80px;}
-.protocol-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 2fr;gap:64px;align-items:center;}
-.protocol-title{font-family:'Playfair Display',serif;font-size:32px;color:#C8E6C9;line-height:1.3;}
-.protocol-body{font-size:15px;color:rgba(200,230,201,0.72);line-height:1.8;font-weight:300;}
-.protocol-points{margin-top:20px;display:flex;flex-direction:column;gap:10px;}
-.protocol-point{display:flex;gap:12px;align-items:flex-start;}
-.pp-dot{width:6px;height:6px;border-radius:50%;background:var(--ochre);margin-top:9px;flex-shrink:0;}
-.pp-text{font-size:14px;color:rgba(200,230,201,0.78);font-weight:300;}
-
-/* MAP SECTION */
-.map-section{background:var(--dark);padding:80px 0 0;}
-.map-header{max-width:1100px;margin:0 auto 36px;padding:0 80px;}
-.map-header .section-title{color:var(--sand);}
-.map-header .section-body{color:rgba(232,213,176,0.58);}
-
-/* INLINE MAP */
-#map-container{
-  width:100%;
-  height:600px;
-  background:#0a1208;
-  border-top:1px solid rgba(193,127,36,0.2);
-  position:relative;
-  overflow:hidden;
-}
-#map-hdr{padding:7px 12px;background:#060e05;border-bottom:1px solid #1a3d25;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
-#map-hdr h1{font-size:13px;font-weight:600;color:#7dd4a8;white-space:nowrap;font-family:'DM Sans',sans-serif;}
-#map-ctrls{display:flex;gap:5px;flex-wrap:wrap;align-items:center;flex:1;}
-.mlb{font-size:10px;padding:3px 9px;border-radius:10px;border:1px solid;cursor:pointer;font-weight:500;background:transparent;transition:opacity 0.15s;font-family:'DM Sans',sans-serif;}
-.mlb.off{opacity:0.3;}
-#msrch{background:#142010;border:1px solid #2d5c3a;border-radius:10px;color:#c8e6c9;font-size:10px;padding:3px 10px;width:150px;outline:none;font-family:'DM Sans',sans-serif;}
-#map-leg{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:3px 12px 4px;background:#060e05;border-bottom:1px solid #1a3d25;}
-.mli{display:flex;align-items:center;gap:4px;font-size:9px;color:#6a9a7a;font-family:'DM Sans',sans-serif;}
-.mld{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
-#map-svg-wrap{width:100%;height:530px;position:relative;}
-#map-svg-wrap svg{width:100%;height:100%;}
-.mlnk{stroke-opacity:0.22;stroke-width:1px;}
-.mlnk.mhl{stroke-opacity:0.9;stroke-width:2px;}
-.mnd{cursor:pointer;}
-.mnd.mdm circle{opacity:0.05;}
-.mnd.mdm text{opacity:0.05;}
-#mpan{position:absolute;top:8px;right:8px;width:210px;background:#0c1a0e;border:1px solid #2a5035;border-radius:8px;padding:11px;display:none;max-height:460px;overflow-y:auto;z-index:10;font-family:'DM Sans',sans-serif;}
-#mpan h3{font-size:11px;font-weight:600;color:#7dd4a8;margin-bottom:3px;line-height:1.4;}
-.mpbadge{display:inline-block;font-size:9px;padding:2px 6px;border-radius:5px;margin-bottom:6px;font-weight:600;}
-#mpan p{font-size:10px;color:#88b898;line-height:1.6;margin-bottom:5px;}
-.mpsec{font-size:9px;font-weight:600;color:#4a7a5e;text-transform:uppercase;letter-spacing:0.06em;margin:5px 0 3px;}
-.mctag{display:inline-block;margin:2px;padding:1px 5px;border-radius:4px;font-size:9px;border:1px solid;cursor:pointer;}
-#mpan a{display:block;font-size:10px;color:#4db87a;margin-top:6px;word-break:break-all;text-decoration:none;}
-.mxbtn{float:right;background:none;border:none;cursor:pointer;font-size:14px;color:#4a7a5e;line-height:1;}
-
-.map-note{max-width:1100px;margin:0 auto;padding:16px 80px;font-size:12px;color:rgba(232,213,176,0.3);font-style:italic;}
-
-/* RESOURCES */
-.resources{background:var(--smoke);}
-.resources-grid{margin-top:56px;display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
-.resource-card{background:white;border:1px solid rgba(193,127,36,0.15);padding:28px 26px;border-radius:3px;text-decoration:none;display:block;transition:border-color 0.2s,transform 0.15s,box-shadow 0.2s;position:relative;overflow:hidden;}
-.resource-card::after{content:'↓';position:absolute;bottom:26px;right:26px;font-size:16px;color:var(--ochre);opacity:0;transform:translateY(4px);transition:opacity 0.2s,transform 0.2s;}
-.resource-card:hover{border-color:var(--ochre);transform:translateY(-3px);box-shadow:0 12px 32px rgba(61,40,16,0.09);}
-.resource-card:hover::after{opacity:1;transform:translateY(0);}
-.rc-tag{font-size:10px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--ochre);margin-bottom:10px;}
-.rc-title{font-family:'Playfair Display',serif;font-size:17px;color:var(--earth);margin-bottom:9px;line-height:1.3;}
-.rc-desc{font-size:13px;color:var(--mid);font-weight:300;line-height:1.65;}
-
-/* PHASE ONE */
-.phase-one{background:var(--earth);padding:100px 80px;position:relative;overflow:hidden;}
-.phase-one::before{content:'I';position:absolute;right:60px;top:50%;transform:translateY(-50%);font-family:'Playfair Display',serif;font-size:380px;font-weight:700;color:rgba(193,127,36,0.05);line-height:1;pointer-events:none;user-select:none;}
-.phase-inner{max-width:1100px;margin:0 auto;position:relative;z-index:1;}
-.phase-one .section-title{color:var(--sand);max-width:580px;}
-.phase-one .section-body{color:rgba(232,213,176,0.62);margin-bottom:44px;}
-.phase-checklist{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:44px;max-width:680px;}
-.check-item{display:flex;align-items:flex-start;gap:10px;font-size:14px;color:rgba(232,213,176,0.68);font-weight:300;}
-.check-dot{width:17px;height:17px;border:1px solid rgba(193,127,36,0.4);border-radius:2px;flex-shrink:0;margin-top:2px;}
-
-/* FOOTER */
-footer{background:var(--dark);padding:48px 80px;border-top:1px solid rgba(193,127,36,0.12);}
-.footer-inner{max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:24px;}
-.footer-left{font-family:'Playfair Display',serif;font-size:14px;color:rgba(232,213,176,0.45);}
-.footer-left strong{color:var(--ochre);}
-.footer-right{font-size:12px;color:rgba(232,213,176,0.28);font-style:italic;max-width:440px;text-align:right;line-height:1.65;}
-
-/* REVEAL */
-.reveal{opacity:0;transform:translateY(22px);transition:opacity 0.7s ease,transform 0.7s ease;}
-.reveal.visible{opacity:1;transform:none;}
-
-@media(max-width:900px){
-  nav{padding:14px 20px;} .nav-links{display:none;}
-  section{padding:64px 20px;} .hero-content{padding:100px 20px 60px;} .hero-scroll{left:20px;}
-  .why-grid,.approach-steps,.resources-grid,.phase-checklist{grid-template-columns:1fr;}
-  .syllabus-inner,.protocol-inner{grid-template-columns:1fr;gap:32px;}
-  .syllabus-banner,.protocol,.phase-one,footer{padding:56px 20px;}
-  .map-header,.map-note{padding:0 20px;}
-  .phase-one::before{display:none;}
-}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#0a1208;color:#e8f5e9;height:100vh;overflow:hidden;}
+#hdr{padding:8px 14px;background:#060e05;border-bottom:1px solid #1a3d25;display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+#hdr h1{font-size:14px;font-weight:700;color:#7dd4a8;white-space:nowrap;}
+#hdr p{font-size:10px;color:#4a7a5e;flex:1;min-width:120px;}
+#ctrls{display:flex;gap:5px;flex-wrap:wrap;align-items:center;}
+.lb{font-size:10px;padding:4px 10px;border-radius:12px;border:1px solid;cursor:pointer;font-weight:500;transition:all 0.15s;background:transparent;opacity:1;}
+.lb.off{opacity:0.35;}
+#srch{background:#142010;border:1px solid #2d5c3a;border-radius:12px;color:#c8e6c9;font-size:10px;padding:4px 10px;width:160px;outline:none;}
+#leg{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:4px 14px 5px;background:#060e05;border-bottom:1px solid #1a3d25;}
+.li{display:flex;align-items:center;gap:4px;font-size:9px;color:#6a9a7a;}
+.ld{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+#cvs{width:100%;height:calc(100vh - 88px);position:relative;}
+svg{width:100%;height:100%;}
+.lnk{stroke-opacity:0.25;stroke-width:1px;}
+.lnk.hl{stroke-opacity:0.9;stroke-width:2px;}
+.nd{cursor:pointer;}
+.nd.dm circle{opacity:0.06;}
+.nd.dm text{opacity:0.06;}
+.nd circle{transition:r 0.12s;}
+#pan{position:absolute;top:8px;right:8px;width:220px;background:#0c1a0e;border:1px solid #2a5035;border-radius:10px;padding:12px;display:none;max-height:calc(100vh - 100px);overflow-y:auto;z-index:10;}
+#pan h3{font-size:11px;font-weight:600;color:#7dd4a8;margin-bottom:3px;line-height:1.4;}
+.pbadge{display:inline-block;font-size:9px;padding:2px 7px;border-radius:6px;margin-bottom:6px;font-weight:600;}
+#pan p{font-size:10px;color:#88b898;line-height:1.6;margin-bottom:6px;}
+.psec{font-size:9px;font-weight:600;color:#4a7a5e;text-transform:uppercase;letter-spacing:0.06em;margin:6px 0 3px;}
+.ctag{display:inline-block;margin:2px;padding:1px 6px;border-radius:5px;font-size:9px;border:1px solid;cursor:pointer;}
+#pan a{display:block;font-size:10px;color:#4db87a;margin-top:7px;word-break:break-all;text-decoration:none;}
+#pan a:hover{text-decoration:underline;}
+.xbtn{float:right;background:none;border:none;cursor:pointer;font-size:15px;color:#4a7a5e;line-height:1;padding:0;}
+#tip{position:absolute;bottom:10px;left:14px;font-size:9px;color:#2d5c3a;}
 </style>
 </head>
 <body>
-
-<nav>
-  <div class="nav-logo">Two Rivers <span>Merge</span></div>
-  <ul class="nav-links">
-    <li><a href="#why">Why</a></li>
-    <li><a href="#syllabus">Syllabus</a></li>
-    <li><a href="#how">How</a></li>
-    <li><a href="#map">The Map</a></li>
-    <li><a href="#resources">Resources</a></li>
-    <li><a href="#phase-one">Start Here</a></li>
-  </ul>
-</nav>
-
-<!-- HERO -->
-<div class="hero">
-  <div class="hero-bg">
-    <div class="ripple"></div><div class="ripple"></div><div class="ripple"></div>
-  </div>
-  <div class="hero-content">
-    <p class="hero-eyebrow">A design education initiative — Gadigal Country, NSW</p>
-    <h1 class="hero-title">Where <em>saltwater</em><br>and freshwater<br>meet.</h1>
-    <p class="hero-body">A Country-centred design resource for NSW Design Innovation Technology teachers. Built with First Nations voices. Anchored to the DIT 7–10 Syllabus (2025). Starting on Gadigal Country.</p>
-    <div class="hero-actions">
-      <a href="#why" class="btn-primary">Why this matters</a>
-      <a href="#how" class="btn-ghost">How it works</a>
-    </div>
-  </div>
-  <div class="hero-scroll"><div class="scroll-line"></div>Scroll to explore</div>
-</div>
-
-<!-- WHY -->
-<section class="why" id="why">
-  <div class="section-inner">
-    <p class="section-eyebrow reveal">The why</p>
-    <h2 class="section-title reveal">Design education should be<br>rooted in place.</h2>
-    <p class="section-body reveal">Every design teacher in NSW is now required to teach from the DIT 7–10 Syllabus (2025). That syllabus places Aboriginal and Torres Strait Islander knowledge, technologies and design practices at the centre — not as a footnote. Two Rivers Merge exists to help teachers do that well.</p>
-    <div class="why-grid">
-      <div class="why-pillar reveal"><div class="why-pillar-num">01</div><h3>The syllabus requires it</h3><p>The NSW DIT 7–10 Syllabus (2025) names Indigenous design, materials and technologies as core curriculum — not optional enrichment. Every design project students undertake should investigate and apply First Nations design thinking.</p></div>
-      <div class="why-pillar reveal"><div class="why-pillar-num">02</div><h3>First Nations voices define good design</h3><p>This resource is not about First Nations culture — it is built with First Nations people. Gadigal knowledge holders and designers co-author the marking criteria. They define what respectful design looks like. Not us.</p></div>
-      <div class="why-pillar reveal"><div class="why-pillar-num">03</div><h3>Materials should regenerate Country</h3><p>Students choose materials that are regenerative, locally sourced, and carbon-conscious. We have mapped 20+ NSW regenerative material suppliers, 25+ First Nations-owned businesses, and 9 environmental restoration organisations by LGA.</p></div>
-      <div class="why-pillar reveal"><div class="why-pillar-num">04</div><h3>Local design solves real problems</h3><p>Each design brief is anchored to a real environmental challenge in a real LGA. Students design for the health of Sydney Harbour, a local river, a foreshore habitat. Their work connects to organisations actively restoring Country.</p></div>
-    </div>
-  </div>
-</section>
-
-<!-- SYLLABUS BANNER -->
-<div class="syllabus-banner" id="syllabus">
-  <div class="syllabus-inner">
-    <div class="syllabus-text">
-      <p class="section-eyebrow reveal">The lighthouse</p>
-      <h2 class="section-title reveal">NSW DIT 7–10<br>Syllabus (2025)</h2>
-      <p class="section-body reveal">Every resource, design brief, material recommendation, and marking rubric in this project navigates back to the DIT syllabus. Three focus areas. Nine outcomes. Real-world project work. At least 4 design projects per student. At least one collaborative activity.</p>
-      <br>
-      <p class="section-body reveal" style="font-size:14px;font-style:italic;margin-top:16px;">This is not supplementary material. This is the curriculum, activated on Country.</p>
-    </div>
-    <div class="syllabus-outcomes reveal">
-      <div class="outcome-pill"><span class="outcome-code">DIT5-WOR-01</span><span class="outcome-desc">Evaluates designer responsibilities — cultural sensitivity, ICIP, sustainability</span></div>
-      <div class="outcome-pill"><span class="outcome-code">DIT5-USR-01</span><span class="outcome-desc">Assesses end-user needs — accessibility, inclusivity, universal design</span></div>
-      <div class="outcome-pill"><span class="outcome-code">DIT5-COM-01</span><span class="outcome-desc">Communicates design ideas — folios, graphical techniques, written reflection</span></div>
-      <div class="outcome-pill"><span class="outcome-code">DIT5-MAT-01</span><span class="outcome-desc">Selects and justifies materials — circular economy, lifecycle assessment</span></div>
-      <div class="outcome-pill"><span class="outcome-code">DIT5-DEP-01</span><span class="outcome-desc">Applies technical and practical skills — prototyping, CAD/CAM, workshop</span></div>
-      <div class="outcome-pill"><span class="outcome-code">DIT5-EVL-01</span><span class="outcome-desc">Develops and evaluates design solutions — suitability testing, iteration</span></div>
-      <div class="outcome-pill"><span class="outcome-code">DIT5-IVT-01</span><span class="outcome-desc">Explains emerging technologies — Aboriginal technologies, AI, renewable energy</span></div>
-    </div>
+<div id="hdr">
+  <h1>🌿 DIT 7–10 Neural Map</h1>
+  <p>NSW Design Innovation Technology · Syllabus · First Nations Businesses · Regenerative Materials · Indigenous Designers · Restoration Orgs</p>
+  <div id="ctrls">
+    <button class="lb" data-l="syllabus" style="border-color:#42a5f5;color:#42a5f5;" onclick="tog(this)">📋 Syllabus</button>
+    <button class="lb" data-l="material" style="border-color:#81c784;color:#81c784;" onclick="tog(this)">🌱 Materials</button>
+    <button class="lb" data-l="fn" style="border-color:#FFB74D;color:#FFB74D;" onclick="tog(this)">🤝 First Nations Biz</button>
+    <button class="lb" data-l="designer" style="border-color:#FF8A65;color:#FF8A65;" onclick="tog(this)">🎨 Designers</button>
+    <button class="lb" data-l="org" style="border-color:#4DB6AC;color:#4DB6AC;" onclick="tog(this)">🌍 Restoration Orgs</button>
+    <input id="srch" type="text" placeholder="Search LGA, material, Country…" oninput="doSearch(this.value)">
+    <button class="lb" style="border-color:#546e6a;color:#546e6a;" onclick="resetAll()">Reset</button>
   </div>
 </div>
-
-<!-- HOW -->
-<section class="approach" id="how">
-  <div class="section-inner">
-    <p class="section-eyebrow reveal">The how</p>
-    <h2 class="section-title reveal">How Two Rivers Merge works<br>in a Year 9 classroom.</h2>
-    <p class="section-body reveal">Five scenarios. One Country. Real restoration organisations. Real First Nations businesses. Real marking — by Gadigal knowledge holders.</p>
-    <div class="approach-steps">
-      <div class="step reveal"><div class="step-num">1</div><h3>Choose your scenario</h3><p>Teachers select one of five scenarios anchored to Sydney Harbour — Saltwater, Fresh Water, City Edge, Sky Country, or Land & Water. Each is a real environmental design challenge on Gadigal Country.</p></div>
-      <div class="step reveal"><div class="step-num">2</div><h3>Walk on Country first</h3><p>Students visit the harbour foreshore before designing. Observe, listen, document. Observation before action. Country before concept. This is the foundation of the folio.</p></div>
-      <div class="step reveal"><div class="step-num">3</div><h3>Investigate with the neural map</h3><p>Students use the interactive map to find local regenerative materials, First Nations designers whose practice connects to their scenario, and restoration organisations in their LGA.</p></div>
-      <div class="step reveal"><div class="step-num">4</div><h3>Design, prototype, document</h3><p>Students work through Investigation → Idea Generation → Production → Evaluation. Every stage documented in a Design and Production Folio. Material choices justified against regenerative and cultural criteria.</p></div>
-      <div class="step reveal"><div class="step-num">5</div><h3>Marked by Gadigal voices</h3><p>Cultural criteria are assessed by Gadigal knowledge holders who co-designed the rubric. Their mark carries equal weight to the teacher's technical assessment. Feedback is attributed: "This comes from Gadigal Country."</p></div>
-      <div class="step reveal"><div class="step-num">6</div><h3>Reflect and improve</h3><p>After each cycle, teachers and Gadigal markers reflect together. What gave you hope? What concerned you? What would you change? This reflection is as important as the project itself.</p></div>
-    </div>
-  </div>
-</section>
-
-<!-- PROTOCOLS -->
-<div class="protocol">
-  <div class="protocol-inner">
-    <div>
-      <p class="section-eyebrow reveal" style="color:var(--ochre)">Before you begin</p>
-      <h3 class="protocol-title reveal">Cultural protocols<br>are not a checklist.</h3>
-    </div>
-    <div class="reveal">
-      <p class="protocol-body">This project is built on relationships, not transactions. Before contacting any First Nations business, designer or knowledge holder:</p>
-      <div class="protocol-points">
-        <div class="protocol-point"><div class="pp-dot"></div><span class="pp-text">Consult your local AECG before reaching out to any First Nations person or business</span></div>
-        <div class="protocol-point"><div class="pp-dot"></div><span class="pp-text">Lead with what you are offering — paid time, clear purpose, student outcomes</span></div>
-        <div class="protocol-point"><div class="pp-dot"></div><span class="pp-text">Allow a full school term for responses. Rushed requests signal disrespect</span></div>
-        <div class="protocol-point"><div class="pp-dot"></div><span class="pp-text">Pay for cultural knowledge. ICIP protocols require it. This is non-negotiable</span></div>
-        <div class="protocol-point"><div class="pp-dot"></div><span class="pp-text">Never list any First Nations person or business without their explicit written consent</span></div>
-        <div class="protocol-point"><div class="pp-dot"></div><span class="pp-text">Share back what students learned. This is a relationship, not a transaction</span></div>
-      </div>
-    </div>
-  </div>
+<div id="leg">
+  <div class="li"><div class="ld" style="background:#1b5e20;border:1px solid #388e3c;"></div>Carbon-negative material</div>
+  <div class="li"><div class="ld" style="background:#2e7d32;border:1px solid #66bb6a;"></div>Regenerative material</div>
+  <div class="li"><div class="ld" style="background:#795548;border:1px solid #a1887f;"></div>Eco-friendly material</div>
+  <div class="li"><div class="ld" style="background:#1565c0;border:1px solid #42a5f5;"></div>Syllabus Focus Area</div>
+  <div class="li"><div class="ld" style="background:#283593;border:1px solid #7986cb;"></div>DIT Outcome</div>
+  <div class="li"><div class="ld" style="background:#4527a0;border:1px solid #9575cd;"></div>Content Area</div>
+  <div class="li"><div class="ld" style="background:#B45309;border:1px solid #FFB74D;"></div>First Nations Business</div>
+  <div class="li"><div class="ld" style="background:#BF360C;border:1px solid #FF8A65;"></div>Indigenous Designer</div>
+  <div class="li"><div class="ld" style="background:#00695c;border:1px solid #4DB6AC;"></div>Restoration Org (LGA)</div>
+  <span style="font-size:9px;color:#2d5c3a;margin-left:auto;">Scroll to zoom · Drag to pan · Click node for details</span>
 </div>
-
-<!-- MAP — fully inlined -->
-<div class="map-section" id="map">
-  <div class="map-header">
-    <p class="section-eyebrow reveal">Interactive tool</p>
-    <h2 class="section-title reveal">The Neural Map</h2>
-    <p class="section-body reveal">Connecting regenerative materials, First Nations businesses, Indigenous designers, restoration organisations, and DIT 7–10 syllabus outcomes. Click any node. Filter by layer. Search by LGA, Country or material.</p>
-  </div>
-
-  <div id="map-container">
-
-    <!-- PATHWAY BUILDER PANEL -->
-    <div id="builder-panel">
-      <div id="bp-head">
-        <h2>🗺 Build My Brief</h2>
-        <p>Select your LGA and the outcomes you're teaching. The map will highlight your pathway and generate a local brief.</p>
-      </div>
-      <div id="bp-body">
-        <div class="bp-section">
-          <span class="bp-label">Your LGA / Region</span>
-          <select class="bp-select" id="bp-lga">
-            <option value="">— Select your LGA —</option>
-            <option value="gadigal">City of Sydney (Gadigal Country)</option>
-            <option value="randwick">Randwick LGA</option>
-            <option value="northern_beaches">Northern Beaches LGA</option>
-            <option value="georges_river">Georges River LGA</option>
-            <option value="sutherland">Sutherland Shire LGA</option>
-            <option value="inner_west">Inner West LGA (Marrickville)</option>
-            <option value="penrith">City of Penrith (Darug Country)</option>
-            <option value="newcastle">City of Newcastle</option>
-            <option value="lismore">Lismore LGA (Bundjalung Country)</option>
-            <option value="byron">Byron Shire LGA</option>
-            <option value="wagga">Wagga Wagga LGA (Wiradjuri Country)</option>
-            <option value="midcoast">MidCoast NSW</option>
-            <option value="albury">Albury LGA</option>
-            <option value="ku_ring_gai">Ku-ring-gai LGA</option>
-            <option value="other_nsw">Other NSW — search the map</option>
-          </select>
-        </div>
-
-        <div class="bp-section">
-          <span class="bp-label">Two Rivers Scenario</span>
-          <select class="bp-select" id="bp-scenario-sel">
-            <option value="">— Let the tool suggest one —</option>
-            <option value="saltwater">🌊 Saltwater</option>
-            <option value="freshwater">💧 Fresh Water</option>
-            <option value="city">🏙 City Edge</option>
-            <option value="sky">☁️ Sky Country</option>
-            <option value="land">🌱 Land & Water</option>
-          </select>
-        </div>
-
-        <div class="bp-section">
-          <span class="bp-label">DIT Outcomes You're Targeting</span>
-          <div class="bp-outcomes">
-            <label class="bp-outcome"><input type="checkbox" value="o1" onchange="bpOutcomeChange()"><span class="bp-outcome-code">WOR-01</span><span class="bp-outcome-desc">Designer responsibilities, ICIP, cultural sensitivity</span></label>
-            <label class="bp-outcome"><input type="checkbox" value="o2" onchange="bpOutcomeChange()"><span class="bp-outcome-code">USR-01</span><span class="bp-outcome-desc">End-user needs, universal design, inclusivity</span></label>
-            <label class="bp-outcome"><input type="checkbox" value="o3" onchange="bpOutcomeChange()"><span class="bp-outcome-code">COM-01</span><span class="bp-outcome-desc">Design communication, folios, annotation</span></label>
-            <label class="bp-outcome"><input type="checkbox" value="o4" onchange="bpOutcomeChange()"><span class="bp-outcome-code">SAF-01</span><span class="bp-outcome-desc">Safe work practices, risk management</span></label>
-            <label class="bp-outcome"><input type="checkbox" value="o5" onchange="bpOutcomeChange()"><span class="bp-outcome-code">DEP-01</span><span class="bp-outcome-desc">Technical skills, prototyping, CAD/CAM</span></label>
-            <label class="bp-outcome"><input type="checkbox" value="o6" onchange="bpOutcomeChange()"><span class="bp-outcome-code">MAT-01</span><span class="bp-outcome-desc">Material selection, circular economy, LCA</span></label>
-            <label class="bp-outcome"><input type="checkbox" value="o7" onchange="bpOutcomeChange()"><span class="bp-outcome-code">USE-01</span><span class="bp-outcome-desc">Tools, equipment, processes, CAM</span></label>
-            <label class="bp-outcome"><input type="checkbox" value="o8" onchange="bpOutcomeChange()"><span class="bp-outcome-code">EVL-01</span><span class="bp-outcome-desc">Evaluate and test design solutions</span></label>
-            <label class="bp-outcome"><input type="checkbox" value="o9" onchange="bpOutcomeChange()"><span class="bp-outcome-code">IVT-01</span><span class="bp-outcome-desc">Emerging technologies, Aboriginal tech, AI</span></label>
-          </div>
-        </div>
-
-        <button id="bp-generate" onclick="generateBrief()">Generate My Local Brief →</button>
-      </div>
-
-      <div id="bp-result">
-        <div class="bp-result-head">
-          <h3 id="bp-result-title">Your Local Brief</h3>
-          <span onclick="clearResult()">✕ Clear</span>
-        </div>
-        <div class="bp-cards" id="bp-cards"></div>
-        <p class="bp-protocol-note">Remember: consult your AECG before contacting any First Nations business or knowledge holder. Allow a full term for responses. Always offer payment for cultural knowledge and time.</p>
-      </div>
-    </div>
-
-    <div id="map-hdr">
-      <h1>🌿 DIT 7–10 Neural Map</h1>
-      <div id="map-ctrls">
-        <button class="mlb" data-ml="syllabus" style="border-color:#42a5f5;color:#42a5f5;" onclick="mtog(this)">📋 Syllabus</button>
-        <button class="mlb" data-ml="material" style="border-color:#81c784;color:#81c784;" onclick="mtog(this)">🌱 Materials</button>
-        <button class="mlb" data-ml="fn" style="border-color:#FFB74D;color:#FFB74D;" onclick="mtog(this)">🤝 First Nations Biz</button>
-        <button class="mlb" data-ml="designer" style="border-color:#FF8A65;color:#FF8A65;" onclick="mtog(this)">🎨 Designers</button>
-        <button class="mlb" data-ml="org" style="border-color:#4DB6AC;color:#4DB6AC;" onclick="mtog(this)">🌍 Orgs</button>
-        <input id="msrch" type="text" placeholder="Search…" oninput="mSearch(this.value)">
-        <button class="mlb" style="border-color:#546e6a;color:#546e6a;" onclick="mReset()">Reset</button>
-        <button class="mlb" id="builder-toggle" style="border-color:#C17F24;color:#C17F24;font-weight:600;" onclick="toggleBuilder()">🗺 Build My Brief</button>
-      </div>
-    </div>
-    <div id="map-leg">
-      <div class="mli"><div class="mld" style="background:#1b5e20;border:1px solid #388e3c"></div>Carbon-negative</div>
-      <div class="mli"><div class="mld" style="background:#2e7d32;border:1px solid #66bb6a"></div>Regenerative</div>
-      <div class="mli"><div class="mld" style="background:#795548;border:1px solid #a1887f"></div>Eco-friendly</div>
-      <div class="mli"><div class="mld" style="background:#1565c0;border:1px solid #42a5f5"></div>Focus Area</div>
-      <div class="mli"><div class="mld" style="background:#283593;border:1px solid #7986cb"></div>Outcome</div>
-      <div class="mli"><div class="mld" style="background:#4527a0;border:1px solid #9575cd"></div>Content</div>
-      <div class="mli"><div class="mld" style="background:#B45309;border:1px solid #FFB74D"></div>First Nations Biz</div>
-      <div class="mli"><div class="mld" style="background:#BF360C;border:1px solid #FF8A65"></div>Designer</div>
-      <div class="mli"><div class="mld" style="background:#00695c;border:1px solid #4DB6AC"></div>Restoration Org</div>
-      <span style="font-size:9px;color:#2d5c3a;margin-left:auto;">Scroll to zoom · Drag · Click for details</span>
-    </div>
-    <div id="map-svg-wrap">
-      <svg id="msvg" style="width:100%;height:100%;"></svg>
-      <div id="mpan">
-        <button class="mxbtn" onclick="mClosePan()">×</button>
-        <div id="mpbadge" class="mpbadge"></div>
-        <h3 id="mpname"></h3>
-        <p id="mpdesc"></p>
-        <div id="mpmeta"></div>
-        <div><div class="mpsec">Connected to</div><div id="mpconn"></div></div>
-        <a id="mpurl" href="#" target="_blank"></a>
-      </div>
-    </div>
-  </div>
-  <p class="map-note">↑ Use filter buttons to toggle layers. Click any node for full details. Search by LGA, Country, material or designer name.</p>
+<div id="cvs"><svg id="svg"></svg>
+<div id="pan">
+  <button class="xbtn" onclick="closePan()">×</button>
+  <div id="pbadge" class="pbadge"></div>
+  <h3 id="pname"></h3>
+  <p id="pdesc"></p>
+  <div id="pmeta"></div>
+  <div><div class="psec">Connected to</div><div id="pconn"></div></div>
+  <a id="purl" href="#" target="_blank"></a>
 </div>
-
-<!-- RESOURCES -->
-<section class="resources" id="resources">
-  <div class="section-inner">
-    <p class="section-eyebrow reveal">Project documents</p>
-    <h2 class="section-title reveal">Everything you need<br>to get started.</h2>
-    <p class="section-body reveal">All resources are editable Word, Excel and HTML files. Everything navigates back to the DIT 7–10 Syllabus.</p>
-    <div class="resources-grid">
-      <a href="#" class="resource-card reveal"><p class="rc-tag">Design Brief · Word Doc</p><h3 class="rc-title">Sydney Harbour Gadigal Design Brief</h3><p class="rc-desc">Complete Year 9 design brief. Five scenarios, all DIT outcomes mapped, regenerative materials, First Nations designers, restoration orgs, assessment criteria.</p></a>
-      <a href="#" class="resource-card reveal"><p class="rc-tag">For Gadigal Markers · Word Doc</p><h3 class="rc-title">Gadigal Markers Briefing Document</h3><p class="rc-desc">Written directly for Gadigal knowledge holders invited to co-design the marking rubric and assess student work. Transparent about time, ask, and payment.</p></a>
-      <a href="#" class="resource-card reveal"><p class="rc-tag">One Pager · Word Doc</p><h3 class="rc-title">Gadigal Marking Partnership</h3><p class="rc-desc">A single-page conversation starter for approaching contacts at UTS and University of Sydney.</p></a>
-      <a href="#" class="resource-card reveal"><p class="rc-tag">Implementation · Word Doc</p><h3 class="rc-title">Phase 1 Implementation Steps</h3><p class="rc-desc">Five steps and a 21-item master checklist for running the first design brief cycle on Gadigal Country.</p></a>
-      <a href="#" class="resource-card reveal"><p class="rc-tag">Budget · Excel</p><h3 class="rc-title">Year 1 Project Budget</h3><p class="rc-desc">Full $5,000 budget breakdown. Gadigal markers are paid first. Low and high estimates, health check, and non-negotiable principles.</p></a>
-      <a href="#" class="resource-card reveal"><p class="rc-tag">Database · Excel</p><h3 class="rc-title">First Nations Regenerative Materials</h3><p class="rc-desc">25 Aboriginal and First Nations-owned businesses across native plants, biochar, textiles, botanicals and design. Cultural protocol guide included.</p></a>
-    </div>
-  </div>
-</section>
-
-<!-- PHASE ONE -->
-<section class="phase-one" id="phase-one">
-  <div class="phase-inner">
-    <p class="section-eyebrow reveal">Where to begin</p>
-    <h2 class="section-title reveal">Start small.<br>Start on Gadigal Country.<br>Test it honestly.</h2>
-    <p class="section-body reveal">Phase One is one or two Year 9 classes, one design brief cycle, two Gadigal markers, one term. It is not about getting it perfect. It is about building trust, learning what Country-centred design education actually looks like, and creating a model that First Nations communities want to be part of.</p>
-    <div class="phase-checklist">
-      <div class="check-item reveal"><div class="check-dot"></div><span>Read the DIT 7–10 Syllabus (2025)</span></div>
-      <div class="check-item reveal"><div class="check-dot"></div><span>Read the Two Rivers training document</span></div>
-      <div class="check-item reveal"><div class="check-dot"></div><span>Contact your AECG first</span></div>
-      <div class="check-item reveal"><div class="check-dot"></div><span>Approach UTS / Uni Sydney contacts</span></div>
-      <div class="check-item reveal"><div class="check-dot"></div><span>Confirm payment before anything else</span></div>
-      <div class="check-item reveal"><div class="check-dot"></div><span>Co-design the rubric — listen more than you talk</span></div>
-      <div class="check-item reveal"><div class="check-dot"></div><span>Take students to the harbour foreshore</span></div>
-      <div class="check-item reveal"><div class="check-dot"></div><span>Reflect honestly after marking</span></div>
-    </div>
-    <div class="hero-actions">
-      <a href="#resources" class="btn-primary">Download Phase 1 Steps</a>
-      <a href="#resources" class="btn-ghost">Download the Design Brief</a>
-    </div>
-  </div>
-</section>
-
-<footer>
-  <div class="footer-inner">
-    <div class="footer-left"><strong>Two Rivers Merge</strong><br>Design Education on Country<br>Gadigal Land · NSW Australia</div>
-    <div class="footer-right">This resource is in active development. First Nations designers and knowledge holders are at the centre of all decisions. Nothing is published without consent. We acknowledge the Gadigal people of the Eora Nation as the Traditional Custodians of the land on which this work begins.</div>
-  </div>
-</footer>
-
+<div id="tip">Scroll to zoom · Drag to pan · Click any node for details</div>
+</div>
 <script>
-// ── SCROLL REVEAL ────────────────────────────────────────────────────────────
-const reveals=document.querySelectorAll('.reveal');
-const revObs=new IntersectionObserver((entries)=>{
-  entries.forEach((e,i)=>{if(e.isIntersecting){setTimeout(()=>e.target.classList.add('visible'),i*70);revObs.unobserve(e.target);}});
-},{threshold:0.08,rootMargin:'0px 0px -30px 0px'});
-reveals.forEach(el=>revObs.observe(el));
-
-// ── NEURAL MAP ───────────────────────────────────────────────────────────────
-const MN=[
-{id:"fa1",l:"syllabus",sub:"focus",lb:"Design &\nInnovation",name:"Focus Area 1: Design & Innovation",desc:"Evaluates designer responsibilities, assesses end-user needs, and communicates design ideas. Covers design disciplines, ICIP protocols, sustainability, ethics, and entrepreneurship.",r:26,col:"#1565c0",str:"#42a5f5"},
-{id:"fa2",l:"syllabus",sub:"focus",lb:"Applying\nDesign\nProcesses",name:"Focus Area 2: Applying Design Processes",desc:"Applies safe work practices, selects and justifies materials, develops innovative design solutions through investigation, idea generation, production, and evaluation.",r:26,col:"#1565c0",str:"#42a5f5"},
-{id:"fa3",l:"syllabus",sub:"focus",lb:"Applications\nof Technology",name:"Focus Area 3: Applications of Technology",desc:"Investigates Aboriginal and Torres Strait Islander technologies, historic and emerging technologies, CAD/CAM tools, digital control technologies, and ethical AI use.",r:26,col:"#1565c0",str:"#42a5f5"},
-{id:"o1",l:"syllabus",sub:"outcome",lb:"WOR-01",name:"DIT5-WOR-01",desc:"Evaluates responsibilities of designers — cultural sensitivity, ICIP, sustainability, accessibility, intellectual property.",r:15,col:"#283593",str:"#7986cb"},
-{id:"o2",l:"syllabus",sub:"outcome",lb:"USR-01",name:"DIT5-USR-01",desc:"Assesses end-user needs — accessibility, inclusivity, ergonomics, safety, universal design principles.",r:15,col:"#283593",str:"#7986cb"},
-{id:"o3",l:"syllabus",sub:"outcome",lb:"COM-01",name:"DIT5-COM-01",desc:"Communicates design ideas — folios, graphical techniques, written texts, digital presentation.",r:15,col:"#283593",str:"#7986cb"},
-{id:"o4",l:"syllabus",sub:"outcome",lb:"SAF-01",name:"DIT5-SAF-01",desc:"Applies risk management and safe work practices — tools, workshop, digital safety.",r:15,col:"#283593",str:"#7986cb"},
-{id:"o5",l:"syllabus",sub:"outcome",lb:"DEP-01",name:"DIT5-DEP-01",desc:"Applies technical and practical skills — prototyping, modelling, CAD/CAM, workshop.",r:15,col:"#283593",str:"#7986cb"},
-{id:"o6",l:"syllabus",sub:"outcome",lb:"MAT-01",name:"DIT5-MAT-01",desc:"Selects and justifies materials — sustainable materials, circular economy, LCA.",r:15,col:"#283593",str:"#7986cb"},
-{id:"o7",l:"syllabus",sub:"outcome",lb:"USE-01",name:"DIT5-USE-01",desc:"Selects tools, equipment and processes — CAM: 3D printer, vinyl cutter, laser cutter.",r:15,col:"#283593",str:"#7986cb"},
-{id:"o8",l:"syllabus",sub:"outcome",lb:"EVL-01",name:"DIT5-EVL-01",desc:"Develops and evaluates design solutions — suitability testing, end-user evaluation, iteration.",r:15,col:"#283593",str:"#7986cb"},
-{id:"o9",l:"syllabus",sub:"outcome",lb:"IVT-01",name:"DIT5-IVT-01",desc:"Explains influence of emerging technologies — Aboriginal technologies, AI, renewable energy.",r:15,col:"#283593",str:"#7986cb"},
-{id:"c1",l:"syllabus",sub:"content",lb:"Design &\nDesigners",name:"Content: Design & Designers",desc:"Design purposes · Disciplines · ICIP protocols · IP · Sustainability · Aboriginal & TSI design solutions.",r:12,col:"#4527a0",str:"#9575cd"},
-{id:"c2",l:"syllabus",sub:"content",lb:"Innovation &\nEntreprise",name:"Content: Innovation & Entrepreneurship",desc:"Types of innovation · Universal design · Entrepreneurial skills · Crowdsourcing · Collaborative practices.",r:12,col:"#4527a0",str:"#9575cd"},
-{id:"c3",l:"syllabus",sub:"content",lb:"Investigation",name:"Content: Investigation",desc:"Aboriginal & TSI materials & technologies · Sustainable materials · Circular economy · LCA · Design briefs.",r:12,col:"#4527a0",str:"#9575cd"},
-{id:"c4",l:"syllabus",sub:"content",lb:"Idea\nGeneration",name:"Content: Idea Generation & Development",desc:"Graphical communication · Annotating folios · Sketching · Sustainable design strategies · Modelling · Iteration.",r:12,col:"#4527a0",str:"#9575cd"},
-{id:"c5",l:"syllabus",sub:"content",lb:"Production &\nRealisation",name:"Content: Production & Realisation",desc:"Prototypes · Working models · Justify materials · Select tools and equipment · Safe work practices.",r:12,col:"#4527a0",str:"#9575cd"},
-{id:"c6",l:"syllabus",sub:"content",lb:"Evaluation",name:"Content: Evaluation",desc:"Ongoing evaluation · Suitability and end-user testing · Written reflection and documentation.",r:12,col:"#4527a0",str:"#9575cd"},
-{id:"c7",l:"syllabus",sub:"content",lb:"Understanding\nTechnology",name:"Content: Understanding Technology",desc:"Aboriginal & TSI technologies: coolamons, woomeras, fish traps, resin · Historic to emerging · Assistive technologies.",r:12,col:"#4527a0",str:"#9575cd"},
-{id:"c8",l:"syllabus",sub:"content",lb:"Applying\nTechnology",name:"Content: Applying Technology",desc:"Digital control · CAD: vector, raster, 3D · CAM: 3D printer, vinyl cutter, laser cutter · Ethical AI use.",r:12,col:"#4527a0",str:"#9575cd"},
-// Materials
-{id:"m1",l:"material",sub:"cn",lb:"Hempcrete",name:"Hempcrete",desc:"Carbon-negative bio-composite of hemp hurd + lime. Absorbs more CO₂ during growth than production emits.",supplier:"AHMC (hempmasonry.com.au) NSW",lga:"NSW-wide",r:14,col:"#1b5e20",str:"#388e3c"},
-{id:"m2",l:"material",sub:"cn",lb:"Biochar",name:"Biochar",desc:"Pyrolysis converts biomass into stable carbon locked in soil for centuries. Improves soil microbial health.",supplier:"Pure Biochar NSW",lga:"NSW-wide",r:14,col:"#1b5e20",str:"#388e3c"},
-{id:"m3",l:"material",sub:"cn",lb:"Hemp Hurd",name:"Hemp Hurd",desc:"Grown regeneratively in NSW. Sequesters carbon, improves soil, no pesticides.",supplier:"Ashford Hemp Industries (Inverell NSW)",lga:"Inverell NSW",r:13,col:"#1b5e20",str:"#388e3c"},
-{id:"m4",l:"material",sub:"cn",lb:"Mycelium",name:"Mycelium Panels",desc:"Grown from agricultural waste. Fully compostable. Carbon-negative manufacturing.",supplier:"Rootlab (Marrickville, Inner West Sydney)",lga:"Inner West Sydney",r:13,col:"#1b5e20",str:"#388e3c"},
-{id:"m5",l:"material",sub:"rg",lb:"Wool\nInsulation",name:"Sheep Wool Insulation",desc:"Landfill-diverted Australian wool. Renewable, biodegradable, absorbs VOCs.",supplier:"Planet Protector NSW",lga:"NSW distribution",r:13,col:"#2e7d32",str:"#66bb6a"},
-{id:"m6",l:"material",sub:"rg",lb:"Recycled\nPlastics",name:"Recycled Plastic Panels",desc:"100% recycled HDPE/LDPE/PP panels. Fully recyclable. Closed-loop circular.",supplier:"Resourceful Living (Newcastle NSW)",lga:"Newcastle NSW",r:13,col:"#2e7d32",str:"#66bb6a"},
-{id:"m7",l:"material",sub:"rg",lb:"Reclaimed\nTimber",name:"Reclaimed Timber",desc:"Structural timber from demolished buildings. Prevents embodied carbon re-emission.",supplier:"Ironwood Australia (Botany, Sydney)",lga:"Bayside Sydney",r:13,col:"#2e7d32",str:"#66bb6a"},
-{id:"m8",l:"material",sub:"rg",lb:"Rammed\nEarth",name:"Rammed Earth",desc:"Local subsoil, minimal processing. Low embodied energy. High thermal mass.",supplier:"Rammed Earth Australia (Sydney + Wagga)",lga:"Wagga Wagga / Sydney",r:13,col:"#2e7d32",str:"#66bb6a"},
-{id:"m9",l:"material",sub:"ef",lb:"Lime\nRender",name:"Natural Lime Render",desc:"Re-carbonates over time, locking CO₂. Vapour-permeable. Non-toxic.",supplier:"Eco-Core (Mt Kuring-Gai NSW)",lga:"Ku-ring-gai NSW",r:11,col:"#795548",str:"#a1887f"},
-{id:"m10",l:"material",sub:"ef",lb:"FSC\nTimber",name:"FSC Certified Timber",desc:"Forest Stewardship Council certified. Sequesters carbon, protects biodiversity.",supplier:"Australian Sustainable Timbers (MidCoast NSW)",lga:"MidCoast NSW",r:11,col:"#795548",str:"#a1887f"},
-// First Nations Businesses
-{id:"fn1",l:"fn",sub:"fn_plants",lb:"Muru\nMittigar",name:"Muru Mittigar Native Nursery",desc:"Largest Indigenous-operated native seed bank in NSW. Provenance native plants, bush tucker species. Supply Nation registered. Schools program.",heritage:"Darug Country",lga:"City of Penrith NSW",url:"murumittigar.com.au",r:14,col:"#B45309",str:"#FFB74D"},
-{id:"fn2",l:"fn",sub:"fn_plants",lb:"IndigiGrow",name:"IndigiGrow",desc:"Aboriginal-owned. Specialist in critically endangered Eastern Suburbs Banksia Scrub. Two Sydney nurseries. First Hand Solutions Aboriginal Corporation.",heritage:"Bidjigal Country",lga:"Randwick LGA NSW",url:"indigigrow.com.au",r:13,col:"#B45309",str:"#FFB74D"},
-{id:"fn3",l:"fn",sub:"fn_plants",lb:"Native\nFoodways",name:"Native Foodways",desc:"First Nations-owned & led social enterprise. Native foods, botanicals, native food farms network. Supply Nation registered. Bakery on Gadigal land.",heritage:"Torres Strait / Pitta Pitta / Wiradjuri",lga:"City of Sydney NSW",url:"nativefoodways.com.au",r:13,col:"#B45309",str:"#FFB74D"},
-{id:"fn4",l:"fn",sub:"fn_plants",lb:"Bush\nto Bowl",name:"Bush to Bowl",desc:"100% Aboriginal-owned. Native plants, bush foods, produce boxes for Sydney, Central Coast and Newcastle. Schools program. Bush tucker walks.",heritage:"Yaegl / Garigal / Gadigal Country",lga:"Northern Beaches LGA NSW",url:"bushtobowl.com",r:13,col:"#B45309",str:"#FFB74D"},
-{id:"fn5",l:"fn",sub:"fn_land",lb:"Heal\nCountry",name:"Heal Country Biochar",desc:"Biochar 100% crafted by Aboriginal Rangers on Country. Carbon-rich soil enhancer. Supports Heal Country mission improving outcomes for people and Country.",heritage:"Multiple Nations — On Country",lga:"National",url:"buyfirstnations.com.au",r:13,col:"#B45309",str:"#FFB74D"},
-{id:"fn6",l:"fn",sub:"fn_land",lb:"Firesticks\nAlliance",name:"Firesticks Alliance",desc:"Cultural burning and Country management led by Aboriginal and Torres Strait Islander peoples. Reviving ancient fire-management practices to restore Country.",heritage:"Multiple Nations NSW/VIC/QLD/SA/WA",lga:"NSW-wide and National",url:"firesticks.org.au",r:14,col:"#B45309",str:"#FFB74D"},
-{id:"fn7",l:"fn",sub:"fn_textiles",lb:"Ngali",name:"Ngali — Denni Francisco",desc:"Yindayamarra principle — fashion respectful and gentle to Country. Slow fashion. First Indigenous label with standalone AFW show 2023.",heritage:"Wiradjuri Country",lga:"NSW",url:"ngalidesign.com.au",r:12,col:"#B45309",str:"#FFB74D"},
-{id:"fn8",l:"fn",sub:"fn_textiles",lb:"Ngarru\nMiimi",name:"Ngarru Miimi — Lillardia Briggs-Houston",desc:"100% Aboriginal-owned. Ethical slow fashion hand-produced on Wiradjuri Country. Zero-waste. Fashion Designer of the Year 2024.",heritage:"Wiradjuri / Gangulu / Yorta Yorta",lga:"NSW (Wiradjuri Country)",url:"ngarrumiimi.com.au",r:12,col:"#B45309",str:"#FFB74D"},
-{id:"fn9",l:"fn",sub:"fn_textiles",lb:"Liandra\nSwim",name:"Liandra Swim — Liandra Gaykamangu",desc:"Aboriginal-owned. Cultural storytelling in swimwear. ECONYL regenerated fibres. Compostable packaging. Economic pathways for remote community artists.",heritage:"Yolngu Country (Arnhem Land)",lga:"National / NT",url:"liandraswim.com",r:12,col:"#B45309",str:"#FFB74D"},
-{id:"fn10",l:"fn",sub:"fn_textiles",lb:"Clothing\nThe Gaps",name:"Clothing The Gaps",desc:"Aboriginal-owned B Corp social enterprise. 100% profits reinvested into First Nations health campaigns. B Corp certified.",heritage:"Wurundjeri Country VIC",lga:"Brunswick VIC / National",url:"clothingthegaps.com.au",r:12,col:"#B45309",str:"#FFB74D"},
-{id:"fn11",l:"fn",sub:"fn_botanicals",lb:"Kakadu\nPlum Co",name:"Kakadu Plum Co",desc:"Partners directly with Traditional Owners. Wild-harvested native ingredients on Traditional Owners' lands. Sustainable biodegradable packaging.",heritage:"Multiple Nations — NT/WA/QLD",lga:"National",url:"kakaduplumco.com",r:12,col:"#B45309",str:"#FFB74D"},
-{id:"fn12",l:"fn",sub:"fn_design",lb:"Balarinji",name:"Balarinji — Indigenous Design & Strategy",desc:"Australia's leading Indigenous design agency. 40+ years. Designing with Country methodology. Qantas, Transport for NSW, Canva, Microsoft.",heritage:"Yanyuwa / Ngunnawal Country",lga:"Crows Nest Sydney NSW",url:"balarinji.com.au",r:15,col:"#B45309",str:"#FFB74D"},
-{id:"fn13",l:"fn",sub:"fn_design",lb:"Nguluway\nDesignInc",name:"Nguluway DesignInc — Craig Kerslake",desc:"Indigenous design thinking in large-scale architecture. Country-informed placemaking. Partnership with DesignInc (120+ team). Major NSW projects.",heritage:"Wiradjuri Country",lga:"Sydney NSW",url:"nguluway.designinc.com.au",r:12,col:"#B45309",str:"#FFB74D"},
-{id:"fn14",l:"fn",sub:"fn_design",lb:"Gaawaa\nMiyay",name:"Gaawaa Miyay — Lucy Simpson",desc:"Visual narrative design, textile art, public installation. Storytelling connecting Country. State Library NSW and Barangaroo commissions.",heritage:"Yuwaalaraay / Gamilaraay Country",lga:"Sydney NSW",url:"gaawaamiyay.co",r:12,col:"#B45309",str:"#FFB74D"},
-// Designers
-{id:"d1",l:"designer",sub:"d",lb:"Lucy\nSimpson",name:"Lucy Simpson — Gaawaa Miyay",heritage:"Yuwaalaraay",discipline:"Textile & Graphic Design",lga:"Sydney NSW",desc:"Visual narrative, textile art, public installation. Storytelling connecting Country. State Library, Barangaroo commissions.",url:"gaawaamiyay.co",r:13,col:"#BF360C",str:"#FF8A65"},
-{id:"d2",l:"designer",sub:"d",lb:"Balarinji",name:"Balarinji Studio",heritage:"Yanyuwa / Ngunnawal",discipline:"Multi-disciplinary Design",lga:"Sydney NSW",desc:"40+ years. Designing with Country. Qantas Art Series aircraft, Transport for NSW, Canva.",url:"balarinji.com.au",r:15,col:"#BF360C",str:"#FF8A65"},
-{id:"d3",l:"designer",sub:"d",lb:"Denni\nFrancisco",name:"Denni Francisco — Ngali",heritage:"Wiradjuri",discipline:"Fashion Designer",lga:"NSW",desc:"Yindayamarra principle. Slow fashion. AFW 2023 standalone show. Cross-Country collaborations.",url:"ngalidesign.com.au",r:12,col:"#BF360C",str:"#FF8A65"},
-{id:"d4",l:"designer",sub:"d",lb:"Craig\nKerslake",name:"Craig Kerslake — Nguluway DesignInc",heritage:"Wiradjuri",discipline:"Architecture & Urban Planning",lga:"Sydney NSW",desc:"Indigenous design thinking in large-scale architecture. Country-informed placemaking.",url:"nguluway.designinc.com.au",r:12,col:"#BF360C",str:"#FF8A65"},
-{id:"d5",l:"designer",sub:"d",lb:"Kevin\nO'Brien",name:"Kevin O'Brien — BVN Architecture",heritage:"Kaurereg & Meriam",discipline:"Architecture",lga:"Australia",desc:"Large-scale architecture integrating Indigenous design thinking. Goulburn Correctional Centre co-designer.",url:"bvn.com.au",r:12,col:"#BF360C",str:"#FF8A65"},
-{id:"d6",l:"designer",sub:"d",lb:"Alison\nPage",name:"Alison Page Design",heritage:"Walbanga & Wadi Wadi",discipline:"Interior Design",lga:"NSW South Coast",desc:"Culturally informed interior spaces. Co-designer Goulburn Correctional Centre. Advocate for Indigenous IP rights.",url:"alisonpage.com.au",r:12,col:"#BF360C",str:"#FF8A65"},
-// Orgs
-{id:"r1",l:"org",sub:"org",lb:"Richmond River\nLandcare",name:"Richmond River Landcare",lga:"Lismore LGA / Northern Rivers",region:"Northern Rivers NSW",desc:"Riparian restoration, invasive species removal, water quality monitoring on Bundjalung Country.",url:"northernriverslandcare.org.au",r:12,col:"#00695c",str:"#4DB6AC"},
-{id:"r2",l:"org",sub:"org",lb:"Greening\nAustralia NSW",name:"Greening Australia NSW",lga:"NSW-wide",region:"State-wide NSW",desc:"Large-scale habitat restoration, native tree planting, threatened species recovery across all NSW regions.",url:"greeningaustralia.org.au",r:14,col:"#00695c",str:"#4DB6AC"},
-{id:"r3",l:"org",sub:"org",lb:"Georges River\nWildcare",name:"Georges River Wildcare",lga:"Georges River / Canterbury-Bankstown",region:"Sydney South-West",desc:"Waterway and wetland restoration in Sydney's south-west. Native vegetation, wildlife habitat, weed removal.",url:"georgesriverwildcare.org.au",r:12,col:"#00695c",str:"#4DB6AC"},
-{id:"r4",l:"org",sub:"org",lb:"Firesticks\nAlliance",name:"Firesticks Alliance",lga:"NSW-wide / National",region:"NSW + National",desc:"Cultural burning and land management led by Aboriginal and Torres Strait Islander peoples.",url:"firesticks.org.au",r:14,col:"#00695c",str:"#4DB6AC"},
-{id:"r5",l:"org",sub:"org",lb:"Sutherland\nLandcare",name:"Sutherland Shire Landcare",lga:"Sutherland Shire LGA",region:"Sydney South",desc:"Coastal bushland restoration, wildlife corridor re-establishment. Links to Royal National Park.",url:"sutherlandlandcare.org.au",r:12,col:"#00695c",str:"#4DB6AC"},
-{id:"r6",l:"org",sub:"org",lb:"Murrumbidgee\nLandcare",name:"Murrumbidgee Landcare",lga:"Wagga Wagga LGA / Riverina",region:"Riverina NSW",desc:"Soil health, waterway rehabilitation, native vegetation recovery in the Murrumbidgee catchment.",url:"murrumbidgeelandcare.asn.au",r:12,col:"#00695c",str:"#4DB6AC"},
-{id:"r7",l:"org",sub:"org",lb:"Nightcap\nLandcare",name:"Nightcap Landcare",lga:"Lismore / Byron Shire LGA",region:"Northern Rivers NSW",desc:"Rainforest habitat recovery. Seed collection, revegetation, koala habitat restoration. School programs.",url:"northernriverslandcare.org.au",r:12,col:"#00695c",str:"#4DB6AC"},
+const NODES=[
+// ── FOCUS AREAS ──────────────────────────────────────────────────────────────
+{id:"fa1",l:"syllabus",sub:"focus",lb:"Design &\nInnovation",name:"Focus Area 1: Design & Innovation",desc:"Students evaluate designer responsibilities, assess end-user needs, and communicate design ideas. Covers design disciplines, ICIP protocols, sustainability, ethics, and entrepreneurship.",r:28,col:"#1565c0",str:"#42a5f5"},
+{id:"fa2",l:"syllabus",sub:"focus",lb:"Applying\nDesign\nProcesses",name:"Focus Area 2: Applying Design Processes",desc:"Students apply safe work practices, select and justify materials, and develop innovative design solutions through investigation, idea generation, production, and evaluation.",r:28,col:"#1565c0",str:"#42a5f5"},
+{id:"fa3",l:"syllabus",sub:"focus",lb:"Applications\nof Technology",name:"Focus Area 3: Applications of Technology",desc:"Students investigate Aboriginal and Torres Strait Islander technologies, historic and emerging technologies, CAD/CAM tools, digital control technologies, and ethical AI use in design.",r:28,col:"#1565c0",str:"#42a5f5"},
+// ── OUTCOMES ─────────────────────────────────────────────────────────────────
+{id:"o1",l:"syllabus",sub:"outcome",lb:"WOR-01",name:"DIT5-WOR-01 — Designer Responsibilities",desc:"Evaluates the responsibilities of designers and factors affecting their work. Includes cultural sensitivity, ICIP protocols, sustainability, accessibility, and intellectual property.",r:16,col:"#283593",str:"#7986cb"},
+{id:"o2",l:"syllabus",sub:"outcome",lb:"USR-01",name:"DIT5-USR-01 — End User Needs",desc:"Assesses the needs of end users to support innovative design solutions. Includes accessibility, inclusivity, ergonomics, safety, and universal design principles.",r:16,col:"#283593",str:"#7986cb"},
+{id:"o3",l:"syllabus",sub:"outcome",lb:"COM-01",name:"DIT5-COM-01 — Communication",desc:"Communicates ideas, concepts, processes and solutions for design and production. Includes graphical techniques, design folios, written texts, and digital presentation.",r:16,col:"#283593",str:"#7986cb"},
+{id:"o4",l:"syllabus",sub:"outcome",lb:"SAF-01",name:"DIT5-SAF-01 — Safe Work Practices",desc:"Applies risk management and safe work practices through design and production. Includes tool safety, workshop environment, digital safety, and material handling.",r:16,col:"#283593",str:"#7986cb"},
+{id:"o5",l:"syllabus",sub:"outcome",lb:"DEP-01",name:"DIT5-DEP-01 — Technical & Practical Skills",desc:"Applies technical and practical skills for design and production. Includes prototyping, modelling, making, CAD/CAM, workshop skills, and digital fabrication.",r:16,col:"#283593",str:"#7986cb"},
+{id:"o6",l:"syllabus",sub:"outcome",lb:"MAT-01",name:"DIT5-MAT-01 — Material Selection",desc:"Selects and justifies the use of materials based on their properties and suitability for purpose. Includes sustainable materials, circular economy, lifecycle assessment.",r:16,col:"#283593",str:"#7986cb"},
+{id:"o7",l:"syllabus",sub:"outcome",lb:"USE-01",name:"DIT5-USE-01 — Tools & Processes",desc:"Selects and justifies the use of materials, tools, equipment and processes. Includes CAM technologies: 3D printing, laser cutting, vinyl cutting.",r:16,col:"#283593",str:"#7986cb"},
+{id:"o8",l:"syllabus",sub:"outcome",lb:"EVL-01",name:"DIT5-EVL-01 — Design Evaluation",desc:"Develops and evaluates innovative design solutions using quality principles and design processes. Includes suitability testing, end-user evaluation, iterative refinement.",r:16,col:"#283593",str:"#7986cb"},
+{id:"o9",l:"syllabus",sub:"outcome",lb:"IVT-01",name:"DIT5-IVT-01 — Emerging Technologies",desc:"Explains the influence of current and emerging technologies on the practice of designers. Includes AI tools, digital fabrication, renewable energy systems, and assistive technologies.",r:16,col:"#283593",str:"#7986cb"},
+// ── CONTENT AREAS ────────────────────────────────────────────────────────────
+{id:"c1",l:"syllabus",sub:"content",lb:"Design &\nDesigners",name:"Content: Design & Designers",desc:"Design purposes · Disciplines (product, architecture, interior, graphic, fashion) · ICIP protocols · Intellectual property · Sustainability · Aboriginal & TSI design solutions.",r:13,col:"#4527a0",str:"#9575cd"},
+{id:"c2",l:"syllabus",sub:"content",lb:"Innovation &\nEntreprise",name:"Content: Design Innovation, Inclusion & Entrepreneurship",desc:"Types of innovation: incremental, disruptive, radical · Universal design · Safety by design · Entrepreneurial skills: pitching, market analysis, crowdsourcing · Collaborative practices.",r:13,col:"#4527a0",str:"#9575cd"},
+{id:"c3",l:"syllabus",sub:"content",lb:"Investigation",name:"Content: Investigation",desc:"Aboriginal & TSI materials & technologies · Project management · Design briefs · Sustainable materials: circular economy, LCA, design for disassembly, reducing, reusing, recycling.",r:13,col:"#4527a0",str:"#9575cd"},
+{id:"c4",l:"syllabus",sub:"content",lb:"Idea\nGeneration",name:"Content: Idea Generation & Development",desc:"Graphical communication · Annotating folios · Sketching and creative thinking · Sustainable design strategies · Physical and digital modelling · Iterative refinement.",r:13,col:"#4527a0",str:"#9575cd"},
+{id:"c5",l:"syllabus",sub:"content",lb:"Production &\nRealisation",name:"Content: Production & Realisation",desc:"Physical and digital prototypes · Working models · Justify material use · Select tools and workshop equipment · Safe work practices with materials and digital technologies.",r:13,col:"#4527a0",str:"#9575cd"},
+{id:"c6",l:"syllabus",sub:"content",lb:"Evaluation",name:"Content: Evaluation",desc:"Ongoing evaluation through design stages · Suitability and end-user testing · Evaluate against specifications · Written reflection and documentation.",r:13,col:"#4527a0",str:"#9575cd"},
+{id:"c7",l:"syllabus",sub:"content",lb:"Understanding\nTechnology",name:"Content: Understanding Technology",desc:"Aboriginal & TSI technologies: coolamons, woomeras, fish traps, resin · Historic, contemporary and emerging technologies · Assistive technologies · Sustainability technologies.",r:13,col:"#4527a0",str:"#9575cd"},
+{id:"c8",l:"syllabus",sub:"content",lb:"Applying\nTechnology",name:"Content: Applying Technology",desc:"Tools and technologies in online environments · Digital control: microcontrollers, sensors, actuators · CAD: vector, raster, 3D · CAM: 3D printer, vinyl cutter, laser cutter · Ethical AI.",r:13,col:"#4527a0",str:"#9575cd"},
+// ── MATERIALS — carbon negative ───────────────────────────────────────────────
+{id:"m1",l:"material",sub:"cn",lb:"Hempcrete",name:"Hempcrete",desc:"Carbon-negative bio-composite of hemp hurd + lime. Absorbs more CO₂ during growth than production emits. Pest, fire and mould resistant. BCA compliant.",supplier:"AHMC (hempmasonry.com.au)",lga:"NSW-wide",r:15,col:"#1b5e20",str:"#388e3c"},
+{id:"m2",l:"material",sub:"cn",lb:"Biochar",name:"Biochar Soil Amendment",desc:"Pyrolysis converts biomass into stable carbon locked in soil for centuries. Improves soil microbial health and water retention.",supplier:"Pure Biochar NSW (purebiochar.com.au)",lga:"NSW-wide",r:15,col:"#1b5e20",str:"#388e3c"},
+{id:"m3",l:"material",sub:"cn",lb:"Hemp Hurd",name:"Hemp Hurd (Raw)",desc:"Woody hemp stalk core grown in NSW. Sequesters carbon, improves soil, requires no pesticides.",supplier:"Ashford Hemp Industries (ashfordhemp.com.au)",lga:"Inverell NSW",r:14,col:"#1b5e20",str:"#388e3c"},
+{id:"m4",l:"material",sub:"cn",lb:"Mycelium\nPanels",name:"Mycelium Insulation Panels",desc:"Grown from agricultural waste using fungal mycelium. Fully compostable. Carbon-negative manufacturing.",supplier:"Rootlab (rootlab.com.au) Marrickville NSW",lga:"Inner West Sydney",r:14,col:"#1b5e20",str:"#388e3c"},
+// ── MATERIALS — regenerative ──────────────────────────────────────────────────
+{id:"m5",l:"material",sub:"rg",lb:"Wool\nInsulation",name:"Sheep Wool Insulation",desc:"Landfill-diverted Australian crossbred sheep wool. Renewable, biodegradable. Absorbs VOCs and regulates building moisture.",supplier:"Planet Protector (planetprotector.com.au)",lga:"NSW distribution",r:14,col:"#2e7d32",str:"#66bb6a"},
+{id:"m6",l:"material",sub:"rg",lb:"Recycled\nPlastic Panels",name:"Recycled Plastic Building Panels",desc:"100% recycled HDPE/LDPE/PP plastic panels. Fully recyclable at end of life. Closed-loop circular solution.",supplier:"Resourceful Living (Newcastle NSW)",lga:"City of Newcastle",r:14,col:"#2e7d32",str:"#66bb6a"},
+{id:"m7",l:"material",sub:"rg",lb:"Reclaimed\nTimber",name:"Reclaimed & Recycled Timber",desc:"Structural timber salvaged from demolished buildings. Prevents embodied carbon re-emission. Extends resource life 50–100+ years.",supplier:"Ironwood Australia (Botany NSW)",lga:"Bayside Sydney",r:14,col:"#2e7d32",str:"#66bb6a"},
+{id:"m8",l:"material",sub:"rg",lb:"Rammed\nEarth",name:"Stabilised Rammed Earth",desc:"Local subsoil with minimal processing. Low embodied energy. High thermal mass reduces heating and cooling.",supplier:"Rammed Earth Australia (Sydney + Wagga NSW)",lga:"Wagga Wagga / Sydney",r:14,col:"#2e7d32",str:"#66bb6a"},
+{id:"m9",l:"material",sub:"rg",lb:"Recycled\nSoft Plastics",name:"Recycled Soft Plastics Lumber",desc:"Post-consumer farm plastics into structural lumber. 50+ year lifespan, zero maintenance.",supplier:"Plastic Forests (Albury NSW)",lga:"Albury NSW",r:13,col:"#2e7d32",str:"#66bb6a"},
+{id:"m10",l:"material",sub:"rg",lb:"FSC\nTimber",name:"FSC Certified Plantation Timber",desc:"Forest Stewardship Council certified. Ensures forests sequester carbon and protect biodiversity.",supplier:"Australian Sustainable Timbers (MidCoast NSW)",lga:"MidCoast NSW",r:13,col:"#2e7d32",str:"#66bb6a"},
+// ── MATERIALS — eco-friendly ─────────────────────────────────────────────────
+{id:"m11",l:"material",sub:"ef",lb:"Lime\nRender",name:"Natural Lime Render & Binder",desc:"Re-carbonates over time, locking CO₂. Vapour-permeable. Non-toxic. Supports breathable building walls.",supplier:"Eco-Core (Mt Kuring-Gai NSW)",lga:"Ku-ring-gai NSW",r:12,col:"#795548",str:"#a1887f"},
+{id:"m12",l:"material",sub:"ef",lb:"Wood Fibre\nInsul.",name:"Wood Fibre Insulation Boards",desc:"Natural, vapour-open insulation from sustainably managed timber. Fully biodegradable.",supplier:"Insulate Naturally (NSW distribution)",lga:"NSW-wide",r:12,col:"#795548",str:"#a1887f"},
+{id:"m13",l:"material",sub:"ef",lb:"Packaging\nBoards",name:"Recycled Packaging Building Boards",desc:"Upcycles packaging waste into moisture-resistant building boards. Each board saves 25 kg from landfill.",supplier:"saveBOARD (NSW operations)",lga:"NSW-wide",r:12,col:"#795548",str:"#a1887f"},
+// ── FIRST NATIONS BUSINESSES ─────────────────────────────────────────────────
+// Native Plants & Bush Foods
+{id:"fn1",l:"fn",sub:"fn_plants",lb:"Muru\nMittigar",name:"Muru Mittigar Native Nursery",desc:"Largest Indigenous-operated native seed bank in NSW. Provenance native plants, bush tucker species. Wholesale, retail and school garden installation. Supply Nation registered.",heritage:"Darug Country",lga:"City of Penrith NSW",url:"murumittigar.com.au",r:14,col:"#B45309",str:"#FFB74D"},
+{id:"fn2",l:"fn",sub:"fn_plants",lb:"IndigiGrow",name:"IndigiGrow",desc:"Aboriginal-owned. Specialist in critically endangered Eastern Suburbs Banksia Scrub. Native plants, bush foods, medicinal plants. Two Sydney nurseries. First Hand Solutions Aboriginal Corporation.",heritage:"Bidjigal Country",lga:"Randwick LGA NSW",url:"indigigrow.com.au",r:13,col:"#B45309",str:"#FFB74D"},
+{id:"fn3",l:"fn",sub:"fn_plants",lb:"Native\nFoodways",name:"Native Foodways",desc:"First Nations-owned & led social enterprise. Native foods, botanicals, plants. Supply Nation registered. Growing network of First Nations-led native food farms. Bakery on Gadigal land.",heritage:"Torres Strait / Pitta Pitta / Wiradjuri",lga:"City of Sydney NSW",url:"nativefoodways.com.au",r:13,col:"#B45309",str:"#FFB74D"},
+{id:"fn4",l:"fn",sub:"fn_plants",lb:"Bush\nto Bowl",name:"Bush to Bowl",desc:"100% Aboriginal-owned. Native plants, fresh and dried bush foods, produce boxes for Sydney, Central Coast and Newcastle. Bush tucker walks Narrabeen-Warriewood. Schools program available.",heritage:"Yaegl / Garigal / Gadigal Country",lga:"Northern Beaches LGA NSW",url:"bushtobowl.com",r:13,col:"#B45309",str:"#FFB74D"},
+{id:"fn5",l:"fn",sub:"fn_plants",lb:"Uncle\nCharlie's",name:"Uncle Charlie's",desc:"100% Aboriginal-owned. Sustainably sourced native foods grown on Wiradjuri Country. Native food snack products with cultural storytelling. Mission: share, yarn, care for Country.",heritage:"Wiradjuri Country",lga:"Regional NSW",url:"unclecharlies.com.au",r:12,col:"#B45309",str:"#FFB74D"},
+// Biochar & Land
+{id:"fn6",l:"fn",sub:"fn_land",lb:"Heal\nCountry",name:"Heal Country Biochar (via Buy First Nations)",desc:"Biochar 100% crafted by Aboriginal Rangers on Country. Carbon-rich soil enhancer. Boosts soil health and plant growth. Supports Heal Country mission improving outcomes for people and Country.",heritage:"Multiple Nations — On Country",lga:"National",url:"buyfirstnations.com.au",r:14,col:"#B45309",str:"#FFB74D"},
+{id:"fn7",l:"fn",sub:"fn_land",lb:"Firesticks\nAlliance",name:"Firesticks Alliance Indigenous Corporation",desc:"Cultural burning and Country management led by Aboriginal and Torres Strait Islander peoples. Reviving ancient fire-management practices. Works with governments, schools and communities across Australia.",heritage:"Multiple Nations NSW/VIC/QLD/SA/WA",lga:"NSW-wide and National",url:"firesticks.org.au",r:15,col:"#B45309",str:"#FFB74D"},
+{id:"fn8",l:"fn",sub:"fn_land",lb:"Outback\nAcademy",name:"Outback Academy Australia",desc:"Majority Aboriginal-led not-for-profit. Builds regenerative farming businesses for Aboriginal farmers and horticulturalists. Program: Follow the Flowers. Training, business development, on-Country growing.",heritage:"Multiple Nations — National",lga:"National",url:"outbackacademy.com.au",r:12,col:"#B45309",str:"#FFB74D"},
+{id:"fn9",l:"fn",sub:"fn_land",lb:"Noongar\nLand Enterprise",name:"Noongar Land Enterprise Group (NLE)",desc:"Noongar-owned enterprise. Commercially viable Noongar land-based agricultural businesses. Economic, cultural and environmental aspirations combined. Pathway to Noongar self-determination on Country.",heritage:"Noongar Country (WA)",lga:"South-West WA",url:"noongarland.com.au",r:12,col:"#B45309",str:"#FFB74D"},
+// Textiles & Fashion
+{id:"fn10",l:"fn",sub:"fn_textiles",lb:"Ngali",name:"Ngali (Denni Francisco)",desc:"100% Aboriginal-owned. Yindayamarra principle — fashion respectful and gentle to Country. Slow fashion, cross-Country collaborations. First Indigenous label with standalone AFW show 2023.",heritage:"Wiradjuri Country",lga:"NSW",url:"ngalidesign.com.au",r:13,col:"#B45309",str:"#FFB74D"},
+{id:"fn11",l:"fn",sub:"fn_textiles",lb:"Ngarru\nMiimi",name:"Ngarru Miimi (Lillardia Briggs-Houston)",desc:"100% Aboriginal-owned. Ethical, slow fashion hand-produced on Wiradjuri Country. Every piece handmade, zero-waste, cultural storytelling through garment form. Fashion Designer of the Year 2024.",heritage:"Wiradjuri / Gangulu / Yorta Yorta",lga:"NSW (Wiradjuri Country)",url:"ngarrumiimi.com.au",r:12,col:"#B45309",str:"#FFB74D"},
+{id:"fn12",l:"fn",sub:"fn_textiles",lb:"Native\nSwimwear",name:"Native Swimwear (Natalie Hollingsworth)",desc:"100% Aboriginal-owned. Celebrates diversity of First Nations cultures. Fair trade, direct artist collaborations, ethical licensing. First Aboriginal label at New York Fashion Week 2015.",heritage:"Birpi & Ngarabal Country NSW",lga:"NSW / National",url:"nativeswimwearaustralia.com.au",r:12,col:"#B45309",str:"#FFB74D"},
+{id:"fn13",l:"fn",sub:"fn_textiles",lb:"Liandra\nSwim",name:"Liandra Swim (Liandra Gaykamangu)",desc:"100% Aboriginal-owned. Contemporary swimwear with cultural storytelling motifs. ECONYL regenerated fibres. Compostable packaging. Creates direct economic pathways for remote community artists.",heritage:"Yolngu Country (Arnhem Land)",lga:"National / NT",url:"liandraswim.com",r:12,col:"#B45309",str:"#FFB74D"},
+{id:"fn14",l:"fn",sub:"fn_textiles",lb:"Clothing\nThe Gaps",name:"Clothing The Gaps Collective",desc:"Aboriginal-owned B Corp social enterprise. 100% of profits reinvested into First Nations health campaigns and community initiatives. Ethical locally produced garments. B Corp certified.",heritage:"Wurundjeri Country VIC",lga:"Brunswick VIC / National",url:"clothingthegaps.com.au",r:13,col:"#B45309",str:"#FFB74D"},
+// Botanicals & Natural Materials
+{id:"fn15",l:"fn",sub:"fn_botanicals",lb:"Kakadu\nPlum Co",name:"Kakadu Plum Co",desc:"Partners directly with Traditional Owners. Wild-harvested native ingredients on Traditional Owners' lands using traditional practices. Sustainable biodegradable packaging. Kakadu plum, jilungin bush tea.",heritage:"Multiple Nations — NT/WA/QLD",lga:"National",url:"kakaduplumco.com",r:13,col:"#B45309",str:"#FFB74D"},
+{id:"fn16",l:"fn",sub:"fn_botanicals",lb:"Native Oz\nBushfoods",name:"Native Oz Bushfoods (Doug Goebel)",desc:"100% Aboriginal-owned. Native bushfood products. 450+ native food trees on 40-acre farm. Cultural eco-tours. Traditional knowledge of native food systems embedded in production.",heritage:"Bundjalung Country",lga:"Lockyer Valley QLD",url:"nativeozbushfoods.com.au",r:12,col:"#B45309",str:"#FFB74D"},
+{id:"fn17",l:"fn",sub:"fn_botanicals",lb:"NOOD\nAustralia",name:"NOOD Australia",desc:"Indigenous-owned. Natural cleaning and hygiene products made using Indigenous botanicals. Sustainable and environmentally friendly formulations. Washroom products for commercial and institutional use.",heritage:"First Nations-led",lga:"National",url:"noodaustralia.com.au",r:11,col:"#B45309",str:"#FFB74D"},
+// Design, Architecture & Built Environment
+{id:"fn18",l:"fn",sub:"fn_design",lb:"Balarinji",name:"Balarinji — Indigenous Design & Strategy",desc:"Australia's leading Indigenous design agency. 40+ years. Designing with Country methodology. Public art, branding, placemaking, wayfinding. Qantas Art Series, Transport for NSW, Canva, Microsoft.",heritage:"Yanyuwa / Ngunnawal Country",lga:"Crows Nest Sydney NSW",url:"balarinji.com.au",r:16,col:"#B45309",str:"#FFB74D"},
+{id:"fn19",l:"fn",sub:"fn_design",lb:"Nguluway\nDesignInc",name:"Nguluway DesignInc (Craig Kerslake)",desc:"Fuses Indigenous design thinking with large-scale architectural practice. Country-informed placemaking. Partnership with DesignInc (120+ team). Major NSW housing, civic and cultural projects.",heritage:"Wiradjuri Country",lga:"Sydney NSW",url:"nguluway.designinc.com.au",r:13,col:"#B45309",str:"#FFB74D"},
+{id:"fn20",l:"fn",sub:"fn_design",lb:"Gaawaa\nMiyay",name:"Gaawaa Miyay (Lucy Simpson)",desc:"100% Aboriginal-owned creative practice. Visual narrative design, textile art, public installation. Storytelling connecting community to Country. State Library NSW, Barangaroo, Lendlease commissions.",heritage:"Yuwaalaraay / Gamilaraay Country",lga:"Sydney NSW",url:"gaawaamiyay.co",r:13,col:"#B45309",str:"#FFB74D"},
+{id:"fn21",l:"fn",sub:"fn_design",lb:"Kulbardi",name:"Kulbardi",desc:"Indigenous-owned holistic workplace supplier. Extensive sustainable product collection. Circular economy focus. Printed 100,000 copies of National NAIDOC posters. Sustainability-committed supply chain.",heritage:"WA-based / National",lga:"WA / National",url:"kulbardi.com.au",r:11,col:"#B45309",str:"#FFB74D"},
+{id:"fn22",l:"fn",sub:"fn_design",lb:"Remote\nSolar",name:"Remote Solar Solutions",desc:"Indigenous-owned. Designs and maintains sustainable off-grid solar power systems for remote Aboriginal communities. Reduces diesel reliance. Clean energy on Country.",heritage:"Noongar Country WA",lga:"WA Remote",url:"Via industry networks",r:11,col:"#B45309",str:"#FFB74D"},
+// Extra First Nations designers we already had
+{id:"fn23",l:"fn",sub:"fn_design",lb:"Nicole\nMonks",name:"Nicole Monks Design",desc:"Contemporary interior and furniture design informed by Indigenous spatial traditions. Furniture as cultural artefact. Spaces that honour Country and community.",heritage:"Yamatji",lga:"Australia-wide",url:"nicolemonks.com.au",r:12,col:"#B45309",str:"#FFB74D"},
+{id:"fn24",l:"fn",sub:"fn_design",lb:"Marcus\nLee",name:"Marcus Lee Design",desc:"Contemporary art and graphic communications for the First Nations sector. Client work: Melbourne Museum, ANZ, Deakin University, Reconciliation Australia. Good Design Award recipient.",heritage:"Karajarri",lga:"Melbourne VIC / National",url:"marcusleedesign.com.au",r:12,col:"#B45309",str:"#FFB74D"},
+{id:"fn25",l:"fn",sub:"fn_design",lb:"Alison\nPage",name:"Alison Page Design",desc:"Interior design and cultural placemaking for community and institutional settings. Co-designer of Goulburn Correctional Centre interior. Advocate for Indigenous IP rights in design.",heritage:"Walbanga & Wadi Wadi NSW South Coast",lga:"NSW",url:"alisonpage.com.au",r:12,col:"#B45309",str:"#FFB74D"},
+// ── INDIGENOUS DESIGNERS (distinct from First Nations businesses) ───────────────
+{id:"d1",l:"designer",sub:"d",lb:"Denni\nFrancisco",name:"Denni Francisco — Ngali",heritage:"Wiradjuri",discipline:"Fashion Designer",lga:"NSW",desc:"Yindayamarra principle — respectful, gentle design. Slow fashion with cross-Country collaborations. AFW 2023 standalone show.",url:"ngalidesign.com.au",r:13,col:"#BF360C",str:"#FF8A65"},
+{id:"d2",l:"designer",sub:"d",lb:"Balarinji\nStudio",name:"Balarinji",heritage:"Yanyuwa / Ngunnawal",discipline:"Multi-disciplinary Strategy",lga:"Sydney NSW",desc:"Australia's leading Indigenous design agency. 40+ years. Designing with Country. Qantas, Transport for NSW, Canva.",url:"balarinji.com.au",r:16,col:"#BF360C",str:"#FF8A65"},
+{id:"d3",l:"designer",sub:"d",lb:"Craig\nKerslake",name:"Craig Kerslake — Nguluway DesignInc",heritage:"Wiradjuri",discipline:"Architecture & Urban Planning",lga:"Sydney NSW",desc:"Indigenous design thinking in large-scale architecture. Country-informed placemaking.",url:"nguluway.designinc.com.au",r:13,col:"#BF360C",str:"#FF8A65"},
+{id:"d4",l:"designer",sub:"d",lb:"Lucy\nSimpson",name:"Lucy Simpson — Gaawaa Miyay",heritage:"Yuwaalaraay",discipline:"Textile & Graphic Design",lga:"Sydney NSW",desc:"Visual narrative, textile art, public installation. Storytelling connecting Country. State Library, Barangaroo commissions.",url:"gaawaamiyay.co",r:13,col:"#BF360C",str:"#FF8A65"},
+{id:"d5",l:"designer",sub:"d",lb:"Lillardia\nBriggs-Houston",name:"Lillardia Briggs-Houston — Ngarru Miimi",heritage:"Wiradjuri/Gangulu/Yorta Yorta",discipline:"Fashion & Multidisciplinary",lga:"NSW (Wiradjuri Country)",desc:"Ethical slow fashion hand-produced on Wiradjuri Country. Zero-waste. Fashion Designer of the Year 2024.",url:"ngarrumiimi.com.au",r:12,col:"#BF360C",str:"#FF8A65"},
+{id:"d6",l:"designer",sub:"d",lb:"Kevin\nO'Brien",name:"Kevin O'Brien — BVN Architecture",heritage:"Kaurereg & Meriam",discipline:"Architecture",lga:"Australia / International",desc:"Large-scale architecture integrating Indigenous design thinking. Goulburn Correctional Centre (co-designer). BVN Principal.",url:"bvn.com.au",r:13,col:"#BF360C",str:"#FF8A65"},
+{id:"d7",l:"designer",sub:"d",lb:"Alison\nPage",name:"Alison Page Design",heritage:"Walbanga & Wadi Wadi",discipline:"Interior Design & Advocacy",lga:"NSW South Coast",desc:"Culturally informed interior spaces. Co-designer Goulburn Correctional Centre. Advocate for Indigenous IP rights.",url:"alisonpage.com.au",r:12,col:"#BF360C",str:"#FF8A65"},
+{id:"d8",l:"designer",sub:"d",lb:"Juanita\nPage",name:"Juanita Page — Joseph & James",heritage:"Gooreng Gooreng & South Sea Islander",discipline:"Menswear Fashion",lga:"Melbourne VIC",desc:"Contemporary menswear fusing streetwear and tailoring. Cultural identity through sophisticated cuts. AFW 2023 & 2024.",url:"josephandjames.com.au",r:12,col:"#BF360C",str:"#FF8A65"},
+// ── RESTORATION ORGS ─────────────────────────────────────────────────────────
+{id:"r1",l:"org",sub:"org",lb:"Richmond River\nLandcare",name:"Richmond River Landcare",lga:"Lismore LGA / Northern Rivers",region:"Northern Rivers NSW",desc:"Riparian restoration, invasive species removal, water quality monitoring along the Richmond River system on Bundjalung Country.",url:"northernriverslandcare.org.au",r:13,col:"#00695c",str:"#4DB6AC"},
+{id:"r2",l:"org",sub:"org",lb:"Lismore\nEnvironment Centre",name:"Lismore Environment Centre",lga:"Lismore LGA",region:"Northern Rivers NSW",desc:"Education programs, native plant propagation, community sustainability workshops. Long-standing Northern Rivers environmental hub. Partners with schools and TAFE.",url:"lec.org.au",r:13,col:"#00695c",str:"#4DB6AC"},
+{id:"r3",l:"org",sub:"org",lb:"Greening\nAustralia NSW",name:"Greening Australia NSW",lga:"NSW-wide",region:"State-wide NSW",desc:"Large-scale habitat restoration, native tree planting, threatened species recovery. Works with schools, farmers, and community groups across all NSW regions.",url:"greeningaustralia.org.au",r:15,col:"#00695c",str:"#4DB6AC"},
+{id:"r4",l:"org",sub:"org",lb:"Georges River\nWildcare",name:"Georges River Wildcare",lga:"Georges River / Canterbury-Bankstown LGA",region:"Sydney South-West",desc:"Waterway and wetland restoration in Sydney's south-west. Native vegetation, wildlife habitat, weed removal along Georges River.",url:"georgesriverwildcare.org.au",r:12,col:"#00695c",str:"#4DB6AC"},
+{id:"r5",l:"org",sub:"org",lb:"Firesticks\nAlliance",name:"Firesticks Alliance Indigenous Corporation",lga:"NSW-wide / National",region:"NSW + National",desc:"Cultural burning and land management led by Aboriginal and Torres Strait Islander peoples. Reviving ancient fire-management practices.",url:"firesticks.org.au",r:15,col:"#00695c",str:"#4DB6AC"},
+{id:"r6",l:"org",sub:"org",lb:"Sutherland\nLandcare",name:"Sutherland Shire Landcare",lga:"Sutherland Shire LGA",region:"Sydney South",desc:"Coastal bushland restoration in Southern Sydney. Native vegetation recovery, wildlife corridor re-establishment. Links to Royal National Park.",url:"sutherlandlandcare.org.au",r:12,col:"#00695c",str:"#4DB6AC"},
+{id:"r7",l:"org",sub:"org",lb:"Murrumbidgee\nLandcare",name:"Murrumbidgee Landcare",lga:"Wagga Wagga LGA / Riverina",region:"Riverina NSW",desc:"Riverina restoration: soil health, waterway rehabilitation, native vegetation. Works with farmers and schools in the Murrumbidgee catchment.",url:"murrumbidgeelandcare.asn.au",r:12,col:"#00695c",str:"#4DB6AC"},
+{id:"r8",l:"org",sub:"org",lb:"Nightcap\nLandcare",name:"Nightcap Landcare",lga:"Lismore / Byron Shire LGA",region:"Northern Rivers NSW",desc:"Rainforest habitat recovery in the Nightcap Range. Seed collection, revegetation, koala habitat restoration. School partnership programs.",url:"northernriverslandcare.org.au",r:12,col:"#00695c",str:"#4DB6AC"},
+{id:"r9",l:"org",sub:"org",lb:"Muru\nMittigar\nNursery",name:"Muru Mittigar — Restoration Programs",lga:"City of Penrith NSW",region:"Western Sydney",desc:"Also active in habitat restoration beyond supply. Indigenous-led revegetation programs across Western Sydney using provenance native plants.",url:"murumittigar.com.au",r:12,col:"#00695c",str:"#4DB6AC"},
 ];
 
-// ── NEW CONTACTS (added session 2) ───────────────────────────────────────────
-// Cultural capability & design
-{id:"fn26",l:"fn",sub:"fn_design",lb:"YarnnUp\nWilliam\nTrewlynn",name:"William Trewlynn — YarnnUp",desc:"Nucoorilma, Anaiwan and Dunghutti man. Co-Founder & MD YarnnUp. Aboriginal consulting, training and creative agency. Cultural capability training blending Aboriginal philosophy with neuroscience. Supply Nation registered. Tourism Australia Songlines campaign 2025. Redfern — Gadigal Country.",heritage:"Nucoorilma / Anaiwan / Dunghutti",lga:"Redfern / Gadigal Country",url:"yarnnup.com.au",r:13,col:"#B45309",str:"#FFB74D"},
-{id:"fn27",l:"fn",sub:"fn_design",lb:"Tribal Warrior\nUncle Shane",name:"Uncle Shane Phillips — Tribal Warrior",desc:"Eora Nation. CEO Tribal Warrior Aboriginal Corporation. Aboriginal Cultural Cruises on Sydney Harbour. 2013 Australian of the Year Local Hero. Former Aboriginal Attendance Officer — 240+ Sydney schools. Jawun Indigenous partner. Profit for purpose. Redfern, Gadigal Country.",heritage:"Eora Nation",lga:"Redfern / Gadigal Country",url:"tribalwarrior.org",r:13,col:"#B45309",str:"#FFB74D"},
-// Institutions & programs
-{id:"r8",l:"org",sub:"org",lb:"Maritime\nMuseum",name:"Australian National Maritime Museum — Sea Country",desc:"On Gadigal Country, Darling Harbour. Saltwater Cloud, Ghost Nets of the Ocean exhibition, Sea Country Activity Trail, Saltwater Stories Cabinet of Curiosities. Reservoir of knowledges relating to freshwater and saltwater. RAP in place. School programs available.",lga:"Darling Harbour / Gadigal Country",region:"Sydney CBD",url:"sea.museum/en/first-nations",r:13,col:"#00695c",str:"#4DB6AC"},
-{id:"r9",l:"org",sub:"org",lb:"SOH BUILD\nYr 9-10",name:"Sydney Opera House BUILD — Secondary Design Challenge",desc:"Year 9-10 secondary school built environment design program on Gadigal Country (Tubowgule). Enabled by Ove Arup Foundation. First Nations history of Tubowgule explicitly embedded. Same cohort as Two Waters — complementary program.",lga:"Sydney Opera House / Gadigal Country (Tubowgule)",region:"Sydney CBD",url:"sydneyoperahouse.com/learn/sydney-opera-house-build",r:12,col:"#00695c",str:"#4DB6AC"},
-// Government frameworks
-{id:"c9",l:"syllabus",sub:"content",lb:"Connecting\nwith Country",name:"Connecting with Country — NSW Government Architect",desc:"Government Architect NSW framework: 'All NSW built environment projects will be developed with a Country-centred approach guided by Aboriginal people.' Four phases: Starting / Imagining / Shaping / Caring for Country. Five outcomes: Healthy Country, Healthy Community, Protecting Heritage, Cultural Competency, Better Places. Updated August 2025.",r:14,col:"#4527a0",str:"#9575cd"},
-// Key contacts
-{id:"d9",l:"designer",sub:"d",lb:"Uncle Shane\nPhillips",name:"Uncle Shane Phillips — Tribal Warrior",heritage:"Eora Nation",discipline:"Community Leader / Cultural Cruises",lga:"Redfern / Gadigal Country",desc:"Aboriginal Cultural Cruises on Sydney Harbour. 240+ school engagement background. Australian of the Year Local Hero 2013.",url:"tribalwarrior.org",r:12,col:"#BF360C",str:"#FF8A65"},
-{id:"d10",l:"designer",sub:"d",lb:"William\nTrewlynn",name:"William Trewlynn — YarnnUp",heritage:"Nucoorilma / Anaiwan / Dunghutti",discipline:"Cultural Capability Training + Creative Design",lga:"Redfern / Gadigal Country",desc:"Cultural capability training (Aboriginal philosophy + neuroscience). RAP development. Creative agency. Tourism Australia Songlines 2025. Supply Nation registered.",url:"yarnnup.com.au",r:12,col:"#BF360C",str:"#FF8A65"},
-
-// ── ADDITIONAL NODES (session 3) ─────────────────────────────────────────────
-{id:"fn28",l:"fn",sub:"fn_design",lb:"Alison\nPage",name:"Alison Page Design",desc:"Walbanga & Wadi Wadi woman. Creating Indigenous Institute for Designing with Country at UTS. Active Gadigal Country projects: Circular Quay, White Bay, Gadigal Station (Return of the Gadi Reed 2026), New Fish Markets. Co-author 'Design: Building on Country' (Thames & Hudson).",heritage:"Walbanga & Wadi Wadi (NSW South Coast)",lga:"NSW / Gadigal Country",url:"alisonpage.com.au",r:15,col:"#B45309",str:"#FFB74D"},
-{id:"r10",l:"org",sub:"org",lb:"Sydney Harbour\nFed. Trust",name:"Sydney Harbour Federation Trust",desc:"Manages foreshore reserves on Gadigal Country — Cockatoo Island/Wareamah, Middle Head, North Head. Partners with Babana Aboriginal Men's Group. School excursion programs. 2025-2029 Corporate Plan embeds cultural heritage as core work.",lga:"Sydney Harbour — multiple Gadigal Country sites",region:"Sydney Harbour NSW",url:"harbourtrust.gov.au",r:13,col:"#00695c",str:"#4DB6AC"},
-{id:"r11",l:"org",sub:"org",lb:"NSW DPI\nOyster Reefs",name:"NSW DPI — Oyster Reef Restoration",desc:"Active oyster reef restoration Sydney Harbour and Botany Bay. Three school education packages in development (2025). Virtual excursion + teacher PD delivered August 2025. Aboriginal sea Country knowledge central — 65,000 years of aquaculture design knowledge.",lga:"Sydney Harbour + Botany Bay (Gadigal/Bidjigal Country)",region:"Sydney NSW",url:"marine.nsw.gov.au",r:13,col:"#00695c",str:"#4DB6AC"},
-{id:"r12",l:"org",sub:"org",lb:"SEED\nClimate",name:"SEED Indigenous Youth Climate Network",desc:"Australia's First Nations youth-led climate justice organisation. New schools program 'Forming the Foundations'. Young Aboriginal and TSI people leading work to protect Country. Partnership not competition — Two Waters is the mandated curriculum pathway that delivers what SEED builds toward.",lga:"National",region:"National",url:"seedmob.org.au",r:12,col:"#00695c",str:"#4DB6AC"},
-{id:"r13",l:"org",sub:"org",lb:"ACE Hub\nCircular",name:"Australian Circular Economy Hub (ACE Hub)",desc:"Australia's leading national platform for circular economy — a Planet Ark initiative. Case study library, Circularity Live annual conference, RMIT University partnership. Directly supports DIT5-MAT-01 circular economy content. Two Waters is the mandated secondary school activation pathway for CE thinking.",lga:"National (Sydney HQ)",region:"National",url:"acehub.org.au",r:12,col:"#00695c",str:"#4DB6AC"},
-
-const ML=[
+const LINKS=[
+// FA → Outcomes
 {s:"fa1",t:"o1"},{s:"fa1",t:"o2"},{s:"fa1",t:"o3"},
 {s:"fa2",t:"o4"},{s:"fa2",t:"o3"},{s:"fa2",t:"o5"},{s:"fa2",t:"o6"},{s:"fa2",t:"o7"},{s:"fa2",t:"o2"},{s:"fa2",t:"o8"},
 {s:"fa3",t:"o4"},{s:"fa3",t:"o3"},{s:"fa3",t:"o5"},{s:"fa3",t:"o6"},{s:"fa3",t:"o7"},{s:"fa3",t:"o9"},
-{s:"fa1",t:"c1"},{s:"fa1",t:"c2"},{s:"fa2",t:"c3"},{s:"fa2",t:"c4"},{s:"fa2",t:"c5"},{s:"fa2",t:"c6"},{s:"fa3",t:"c7"},{s:"fa3",t:"c8"},
+// FA → Content
+{s:"fa1",t:"c1"},{s:"fa1",t:"c2"},
+{s:"fa2",t:"c3"},{s:"fa2",t:"c4"},{s:"fa2",t:"c5"},{s:"fa2",t:"c6"},
+{s:"fa3",t:"c7"},{s:"fa3",t:"c8"},
+// Outcomes → Content
 {s:"o1",t:"c1"},{s:"o1",t:"c2"},{s:"o2",t:"c2"},{s:"o2",t:"c3"},{s:"o3",t:"c4"},{s:"o3",t:"c6"},
 {s:"o5",t:"c4"},{s:"o5",t:"c5"},{s:"o5",t:"c8"},{s:"o6",t:"c3"},{s:"o6",t:"c5"},
 {s:"o7",t:"c5"},{s:"o7",t:"c8"},{s:"o8",t:"c6"},{s:"o9",t:"c7"},{s:"o9",t:"c8"},
+// Materials → Outcomes & Content
 {s:"m1",t:"o6"},{s:"m1",t:"o8"},{s:"m1",t:"c3"},{s:"m1",t:"c5"},
 {s:"m2",t:"o6"},{s:"m2",t:"o9"},{s:"m2",t:"c7"},{s:"m2",t:"c3"},
-{s:"m3",t:"o6"},{s:"m3",t:"c3"},{s:"m4",t:"o6"},{s:"m4",t:"o9"},{s:"m4",t:"c7"},
-{s:"m5",t:"o6"},{s:"m5",t:"c3"},{s:"m6",t:"o6"},{s:"m6",t:"c2"},
-{s:"m7",t:"o6"},{s:"m7",t:"o7"},{s:"m7",t:"c5"},{s:"m8",t:"o6"},{s:"m8",t:"c5"},
-{s:"m9",t:"o6"},{s:"m9",t:"c5"},{s:"m10",t:"o6"},{s:"m10",t:"c3"},
+{s:"m3",t:"o6"},{s:"m3",t:"c3"},{s:"m3",t:"c5"},
+{s:"m4",t:"o6"},{s:"m4",t:"o9"},{s:"m4",t:"c7"},{s:"m4",t:"o5"},
+{s:"m5",t:"o6"},{s:"m5",t:"o8"},{s:"m5",t:"c3"},
+{s:"m6",t:"o6"},{s:"m6",t:"o8"},{s:"m6",t:"c2"},
+{s:"m7",t:"o6"},{s:"m7",t:"o7"},{s:"m7",t:"c5"},
+{s:"m8",t:"o6"},{s:"m8",t:"o8"},{s:"m8",t:"c5"},
+{s:"m9",t:"o6"},{s:"m9",t:"o7"},{s:"m9",t:"c2"},
+{s:"m10",t:"o6"},{s:"m10",t:"o8"},{s:"m10",t:"c3"},
+{s:"m11",t:"o6"},{s:"m11",t:"c5"},{s:"m12",t:"o6"},{s:"m12",t:"c3"},{s:"m13",t:"o6"},{s:"m13",t:"c2"},
+// First Nations Businesses → Outcomes & Content
 {s:"fn1",t:"o1"},{s:"fn1",t:"o6"},{s:"fn1",t:"c3"},{s:"fn1",t:"c1"},
 {s:"fn2",t:"o1"},{s:"fn2",t:"o6"},{s:"fn2",t:"c3"},{s:"fn2",t:"c7"},
 {s:"fn3",t:"o1"},{s:"fn3",t:"o2"},{s:"fn3",t:"c1"},{s:"fn3",t:"c3"},
 {s:"fn4",t:"o1"},{s:"fn4",t:"o6"},{s:"fn4",t:"c3"},{s:"fn4",t:"c1"},
-{s:"fn5",t:"o6"},{s:"fn5",t:"o9"},{s:"fn5",t:"c7"},{s:"fn5",t:"c3"},
-{s:"fn6",t:"o1"},{s:"fn6",t:"o2"},{s:"fn6",t:"c7"},{s:"fn6",t:"c1"},
-{s:"fn7",t:"o1"},{s:"fn7",t:"o6"},{s:"fn7",t:"c1"},{s:"fn7",t:"c3"},
-{s:"fn8",t:"o1"},{s:"fn8",t:"o6"},{s:"fn8",t:"o5"},{s:"fn8",t:"c1"},
-{s:"fn9",t:"o1"},{s:"fn9",t:"o6"},{s:"fn9",t:"c1"},{s:"fn9",t:"c2"},
-{s:"fn10",t:"o1"},{s:"fn10",t:"o2"},{s:"fn10",t:"c1"},{s:"fn10",t:"c2"},
-{s:"fn11",t:"o1"},{s:"fn11",t:"o6"},{s:"fn11",t:"c7"},{s:"fn11",t:"c3"},
-{s:"fn12",t:"o1"},{s:"fn12",t:"o3"},{s:"fn12",t:"c1"},{s:"fn12",t:"c2"},{s:"fn12",t:"c7"},
-{s:"fn13",t:"o1"},{s:"fn13",t:"o2"},{s:"fn13",t:"c1"},{s:"fn13",t:"c7"},
-{s:"fn14",t:"o1"},{s:"fn14",t:"o3"},{s:"fn14",t:"c1"},{s:"fn14",t:"o6"},
-{s:"fn12",t:"d2"},{s:"fn13",t:"d4"},{s:"fn14",t:"d1"},{s:"fn7",t:"d3"},
-{s:"fn6",t:"r4"},{s:"fn1",t:"r2"},
-{s:"d1",t:"o1"},{s:"d1",t:"o3"},{s:"d1",t:"c1"},{s:"d1",t:"o6"},
+{s:"fn5",t:"o1"},{s:"fn5",t:"o3"},{s:"fn5",t:"c1"},
+{s:"fn6",t:"o6"},{s:"fn6",t:"o9"},{s:"fn6",t:"c7"},{s:"fn6",t:"c3"},
+{s:"fn7",t:"o1"},{s:"fn7",t:"o2"},{s:"fn7",t:"c7"},{s:"fn7",t:"c1"},{s:"fn7",t:"c3"},
+{s:"fn8",t:"o1"},{s:"fn8",t:"o2"},{s:"fn8",t:"c3"},
+{s:"fn9",t:"o1"},{s:"fn9",t:"o2"},{s:"fn9",t:"c1"},
+{s:"fn10",t:"o1"},{s:"fn10",t:"o6"},{s:"fn10",t:"c1"},{s:"fn10",t:"c3"},
+{s:"fn11",t:"o1"},{s:"fn11",t:"o6"},{s:"fn11",t:"o5"},{s:"fn11",t:"c1"},{s:"fn11",t:"c5"},
+{s:"fn12",t:"o1"},{s:"fn12",t:"o6"},{s:"fn12",t:"c1"},
+{s:"fn13",t:"o1"},{s:"fn13",t:"o6"},{s:"fn13",t:"c1"},{s:"fn13",t:"c2"},
+{s:"fn14",t:"o1"},{s:"fn14",t:"o2"},{s:"fn14",t:"c1"},{s:"fn14",t:"c2"},
+{s:"fn15",t:"o1"},{s:"fn15",t:"o6"},{s:"fn15",t:"c7"},{s:"fn15",t:"c3"},
+{s:"fn16",t:"o1"},{s:"fn16",t:"o6"},{s:"fn16",t:"c7"},
+{s:"fn17",t:"o1"},{s:"fn17",t:"o6"},{s:"fn17",t:"c3"},
+{s:"fn18",t:"o1"},{s:"fn18",t:"o3"},{s:"fn18",t:"c1"},{s:"fn18",t:"c2"},{s:"fn18",t:"c7"},
+{s:"fn19",t:"o1"},{s:"fn19",t:"o2"},{s:"fn19",t:"c1"},{s:"fn19",t:"c7"},
+{s:"fn20",t:"o1"},{s:"fn20",t:"o3"},{s:"fn20",t:"c1"},{s:"fn20",t:"o6"},
+{s:"fn21",t:"o1"},{s:"fn21",t:"o6"},{s:"fn21",t:"c3"},
+{s:"fn22",t:"o9"},{s:"fn22",t:"o1"},{s:"fn22",t:"c7"},
+{s:"fn23",t:"o1"},{s:"fn23",t:"o2"},{s:"fn23",t:"c1"},
+{s:"fn24",t:"o1"},{s:"fn24",t:"o3"},{s:"fn24",t:"c1"},
+{s:"fn25",t:"o1"},{s:"fn25",t:"o2"},{s:"fn25",t:"c1"},
+// FN Biz → Materials
+{s:"fn1",t:"m3"},{s:"fn2",t:"m3"},{s:"fn4",t:"m3"},
+{s:"fn6",t:"m2"},{s:"fn7",t:"m2"},
+{s:"fn10",t:"m5"},{s:"fn11",t:"m5"},{s:"fn13",t:"m5"},
+// Designers → Outcomes & Content
+{s:"d1",t:"o1"},{s:"d1",t:"o6"},{s:"d1",t:"c1"},{s:"d1",t:"c2"},
 {s:"d2",t:"o1"},{s:"d2",t:"o3"},{s:"d2",t:"c1"},{s:"d2",t:"c2"},{s:"d2",t:"c7"},
-{s:"d3",t:"o1"},{s:"d3",t:"o6"},{s:"d3",t:"c1"},{s:"d3",t:"c2"},
-{s:"d4",t:"o1"},{s:"d4",t:"o2"},{s:"d4",t:"c1"},{s:"d4",t:"c7"},
-{s:"d5",t:"o1"},{s:"d5",t:"o2"},{s:"d5",t:"c1"},{s:"d5",t:"c7"},
-{s:"d6",t:"o1"},{s:"d6",t:"o2"},{s:"d6",t:"c1"},
+{s:"d3",t:"o1"},{s:"d3",t:"o2"},{s:"d3",t:"c1"},{s:"d3",t:"c7"},
+{s:"d4",t:"o1"},{s:"d4",t:"o3"},{s:"d4",t:"c1"},{s:"d4",t:"o6"},
+{s:"d5",t:"o1"},{s:"d5",t:"o6"},{s:"d5",t:"c1"},{s:"d5",t:"c5"},
+{s:"d6",t:"o1"},{s:"d6",t:"o2"},{s:"d6",t:"c1"},{s:"d6",t:"c7"},
+{s:"d7",t:"o1"},{s:"d7",t:"o2"},{s:"d7",t:"c1"},
+{s:"d8",t:"o1"},{s:"d8",t:"c1"},{s:"d8",t:"c2"},
+// Orgs → Outcomes & Content
 {s:"r1",t:"o1"},{s:"r1",t:"o2"},{s:"r1",t:"c3"},{s:"r1",t:"c6"},
-{s:"r2",t:"o1"},{s:"r2",t:"o2"},{s:"r2",t:"c3"},{s:"r2",t:"c7"},
-{s:"r3",t:"o1"},{s:"r3",t:"c3"},{s:"r3",t:"c6"},
-{s:"r4",t:"o1"},{s:"r4",t:"o2"},{s:"r4",t:"c7"},{s:"r4",t:"c1"},
-{s:"r5",t:"o1"},{s:"r5",t:"c3"},{s:"r5",t:"c6"},
+{s:"r2",t:"o1"},{s:"r2",t:"o2"},{s:"r2",t:"c1"},{s:"r2",t:"c3"},
+{s:"r3",t:"o1"},{s:"r3",t:"o2"},{s:"r3",t:"c3"},{s:"r3",t:"c7"},
+{s:"r4",t:"o1"},{s:"r4",t:"c3"},{s:"r4",t:"c6"},
+{s:"r5",t:"o1"},{s:"r5",t:"o2"},{s:"r5",t:"c7"},{s:"r5",t:"c1"},
 {s:"r6",t:"o1"},{s:"r6",t:"c3"},{s:"r6",t:"c6"},
 {s:"r7",t:"o1"},{s:"r7",t:"c3"},{s:"r7",t:"c6"},
-
-// Session 3 new links
-{s:"fn28",t:"o1"},{s:"fn28",t:"o2"},{s:"fn28",t:"c1"},{s:"fn28",t:"c7"},{s:"fn28",t:"o6"},
-{s:"r10",t:"o1"},{s:"r10",t:"o2"},{s:"r10",t:"c3"},{s:"r10",t:"c7"},
-{s:"r11",t:"o1"},{s:"r11",t:"o6"},{s:"r11",t:"c7"},{s:"r11",t:"c3"},
-{s:"r12",t:"o1"},{s:"r12",t:"o2"},{s:"r12",t:"c1"},{s:"r12",t:"c3"},
-{s:"r13",t:"o6"},{s:"r13",t:"o8"},{s:"r13",t:"c3"},{s:"r13",t:"c2"},
-// Cross-links
-{s:"fn28",t:"fn19"},{s:"fn28",t:"c9"},
-{s:"r10",t:"r11"},{s:"r11",t:"r8"},
-{s:"r11",t:"m2"},{s:"r12",t:"r11"},
-{s:"r13",t:"m1"},{s:"r13",t:"m2"},{s:"r13",t:"m4"},
-
-// New node links
-{s:"fn26",t:"o1"},{s:"fn26",t:"o3"},{s:"fn26",t:"c1"},{s:"fn26",t:"c2"},
-{s:"fn27",t:"o1"},{s:"fn27",t:"o2"},{s:"fn27",t:"c1"},{s:"fn27",t:"c7"},
-{s:"r8",t:"o1"},{s:"r8",t:"o2"},{s:"r8",t:"c3"},{s:"r8",t:"c7"},
-{s:"r9",t:"o1"},{s:"r9",t:"o5"},{s:"r9",t:"c4"},{s:"r9",t:"c5"},
-{s:"c9",t:"o1"},{s:"c9",t:"o2"},{s:"c9",t:"o6"},{s:"c9",t:"o8"},
-{s:"d9",t:"o1"},{s:"d9",t:"o2"},{s:"d9",t:"c1"},
-{s:"d10",t:"o1"},{s:"d10",t:"o3"},{s:"d10",t:"c1"},{s:"d10",t:"c2"},
-// Cross links
-{s:"fn26",t:"fn27"},{s:"fn26",t:"d10"},
-{s:"fn27",t:"d9"},{s:"fn27",t:"r8"},
-{s:"r8",t:"r9"},{s:"r9",t:"c9"},
-{s:"c9",t:"c1"},{s:"c9",t:"c7"},
-// Connect to Gadigal LGA nodes
-{s:"fn26",t:"fn3"},{s:"fn27",t:"fn3"},
-{s:"r8",t:"fn14"},{s:"r9",t:"fn14"},
-
-{s:"r1",t:"m2"},{s:"r4",t:"m2"},{s:"r2",t:"m3"},{s:"r7",t:"m3"},
+{s:"r8",t:"o1"},{s:"r8",t:"c3"},{s:"r8",t:"c6"},
+{s:"r9",t:"o1"},{s:"r9",t:"o6"},{s:"r9",t:"c3"},
+// Orgs → Materials
+{s:"r1",t:"m2"},{s:"r2",t:"m2"},{s:"r5",t:"m2"},
+{s:"r3",t:"m3"},{s:"r8",t:"m3"},
+// FN Biz → Orgs (cross links)
+{s:"fn7",t:"r5"},{s:"fn1",t:"r9"},{s:"fn2",t:"r4"},
+// FN Biz ↔ Designers (shared practice)
+{s:"fn18",t:"d2"},{s:"fn19",t:"d3"},{s:"fn20",t:"d4"},{s:"fn10",t:"d1"},{s:"fn11",t:"d5"},
 ];
 
-const nm={};MN.forEach(n=>nm[n.id]=n);
-const adj={};MN.forEach(n=>adj[n.id]=[]);
-ML.forEach(l=>{adj[l.s].push(l.t);adj[l.t].push(l.s);});
-const mLS={syllabus:true,material:true,fn:true,designer:true,org:true};
-let mSQ="";
+// ═══ VIZ ═══
+const NM={};NODES.forEach(n=>NM[n.id]=n);
+const adj={};NODES.forEach(n=>adj[n.id]=[]);
+LINKS.forEach(l=>{adj[l.s].push(l.t);adj[l.t].push(l.s);});
 
-function initMap(){
-  const wrap=document.getElementById("map-svg-wrap");
-  const W=wrap.clientWidth||900;
-  const H=wrap.clientHeight||530;
-  const svg=d3.select("#msvg").attr("viewBox",`0 0 ${W} ${H}`);
-  const g=svg.append("g");
-  svg.call(d3.zoom().scaleExtent([0.1,5]).on("zoom",e=>g.attr("transform",e.transform)));
-  const ld=ML.map(l=>({source:l.s,target:l.t}));
-  const sim=d3.forceSimulation(MN)
-    .force("link",d3.forceLink(ld).id(d=>d.id).distance(d=>{
-      const s=nm[d.source.id||d.source],t=nm[d.target.id||d.target];
-      if(!s||!t)return 90;
-      if(s.sub==="focus"||t.sub==="focus")return 100;
-      return 105;
-    }).strength(0.35))
-    .force("charge",d3.forceManyBody().strength(d=>d.sub==="focus"?-450:d.l==="fn"?-190:-160))
-    .force("center",d3.forceCenter(W/2,H/2))
-    .force("collision",d3.forceCollide().radius(d=>d.r+12));
-  const lnk=g.append("g").selectAll("line").data(ld).join("line")
-    .attr("class","mlnk").attr("stroke",d=>{const s=nm[d.source.id||d.source];return s?s.str:"#444";}).attr("stroke-width",1);
-  const nd=g.append("g").selectAll(".mnd").data(MN).join("g").attr("class","mnd")
-    .call(d3.drag()
-      .on("start",(e,d)=>{if(!e.active)sim.alphaTarget(0.3).restart();d.fx=d.x;d.fy=d.y;})
-      .on("drag",(e,d)=>{d.fx=e.x;d.fy=e.y;})
-      .on("end",(e,d)=>{if(!e.active)sim.alphaTarget(0);d.fx=null;d.fy=null;}));
-  nd.append("circle").attr("r",d=>d.r).attr("fill",d=>d.col).attr("stroke",d=>d.str).attr("stroke-width",1.5);
+const layerState={syllabus:true,material:true,fn:true,designer:true,org:true};
+let srchQ="";
+
+const svgEl=document.getElementById("svg");
+const W=svgEl.clientWidth||window.innerWidth;
+const H=svgEl.clientHeight||(window.innerHeight-90);
+
+const svg=d3.select("#svg");
+const g=svg.append("g");
+svg.call(d3.zoom().scaleExtent([0.08,6]).on("zoom",e=>g.attr("transform",e.transform)));
+
+const linksData=LINKS.map(l=>({source:l.s,target:l.t}));
+
+const sim=d3.forceSimulation(NODES)
+  .force("link",d3.forceLink(linksData).id(d=>d.id).distance(d=>{
+    const s=NM[d.source.id||d.source],t=NM[d.target.id||d.target];
+    if(!s||!t)return 90;
+    if(s.sub==="focus"||t.sub==="focus")return 100;
+    if(s.sub==="outcome"||t.sub==="outcome")return 80;
+    return 110;
+  }).strength(0.35))
+  .force("charge",d3.forceManyBody().strength(d=>d.sub==="focus"?-500:d.l==="fn"?-220:-180))
+  .force("center",d3.forceCenter(W/2,H/2))
+  .force("collision",d3.forceCollide().radius(d=>d.r+13));
+
+const lnk=g.append("g").selectAll("line").data(linksData).join("line")
+  .attr("class","lnk")
+  .attr("stroke",d=>{const s=NM[d.source.id||d.source];return s?s.str:"#444";})
+  .attr("stroke-width",1);
+
+const nd=g.append("g").selectAll(".nd").data(NODES).join("g")
+  .attr("class","nd")
+  .call(d3.drag()
+    .on("start",(e,d)=>{if(!e.active)sim.alphaTarget(0.3).restart();d.fx=d.x;d.fy=d.y;})
+    .on("drag",(e,d)=>{d.fx=e.x;d.fy=e.y;})
+    .on("end",(e,d)=>{if(!e.active)sim.alphaTarget(0);d.fx=null;d.fy=null;}));
+
+nd.append("circle")
+  .attr("r",d=>d.r)
+  .attr("fill",d=>d.col)
+  .attr("stroke",d=>d.str)
+  .attr("stroke-width",1.5);
+
+nd.each(function(d){
+  const lines=d.lb.split("\n");
+  const el=d3.select(this);
+  const fs=d.r>24?10:d.r>15?9:8;
+  const lh=fs+2;
+  const th=(lines.length-1)*lh;
+  lines.forEach((line,i)=>{
+    el.append("text")
+      .attr("text-anchor","middle")
+      .attr("dy",`${-th/2+i*lh+fs*0.35}px`)
+      .attr("font-size",`${fs}px`)
+      .attr("fill","#e8f5e9")
+      .attr("font-weight",d.sub==="focus"?"700":"500")
+      .attr("pointer-events","none")
+      .text(line);
+  });
+});
+
+// Panel badges
+const BC={
+  focus:{bg:"#1565c0",tc:"#bbdefb",lb:"Focus Area"},
+  outcome:{bg:"#283593",tc:"#c5cae9",lb:"DIT Outcome"},
+  content:{bg:"#4527a0",tc:"#d1c4e9",lb:"Content Area"},
+  cn:{bg:"#1b5e20",tc:"#c8e6c9",lb:"Carbon-Negative Material"},
+  rg:{bg:"#2e7d32",tc:"#dcedc8",lb:"Regenerative Material"},
+  ef:{bg:"#795548",tc:"#efebe9",lb:"Eco-Friendly Material"},
+  fn_plants:{bg:"#B45309",tc:"#FEF3C7",lb:"First Nations — Native Plants"},
+  fn_land:{bg:"#B45309",tc:"#FEF3C7",lb:"First Nations — Land & Biochar"},
+  fn_textiles:{bg:"#B45309",tc:"#FEF3C7",lb:"First Nations — Textiles"},
+  fn_botanicals:{bg:"#B45309",tc:"#FEF3C7",lb:"First Nations — Botanicals"},
+  fn_design:{bg:"#B45309",tc:"#FEF3C7",lb:"First Nations — Design"},
+  d:{bg:"#BF360C",tc:"#FFE0B2",lb:"Indigenous Designer"},
+  org:{bg:"#00695c",tc:"#e0f2f1",lb:"Restoration Org"},
+};
+
+function showPan(d){
+  const bc=BC[d.sub]||{bg:"#333",tc:"#eee",lb:d.l};
+  const bdg=document.getElementById("pbadge");
+  bdg.textContent=bc.lb; bdg.style.background=bc.bg; bdg.style.color=bc.tc;
+  document.getElementById("pname").textContent=d.name;
+  document.getElementById("pdesc").textContent=d.desc;
+  let meta="";
+  if(d.heritage)meta+=`<div class="psec">Heritage / Country</div><p>${d.heritage}</p>`;
+  if(d.discipline)meta+=`<div class="psec">Discipline</div><p>${d.discipline}</p>`;
+  if(d.lga)meta+=`<div class="psec">Location / LGA</div><p>${d.lga}</p>`;
+  if(d.region)meta+=`<div class="psec">Region</div><p>${d.region}</p>`;
+  if(d.supplier)meta+=`<div class="psec">NSW Supplier</div><p>${d.supplier}</p>`;
+  document.getElementById("pmeta").innerHTML=meta;
+  const conns=(adj[d.id]||[]).map(id=>NM[id]).filter(Boolean);
+  document.getElementById("pconn").innerHTML=conns.slice(0,10).map(n=>{
+    const b2=BC[n.sub]||{bg:"#333",tc:"#eee"};
+    return `<span class="ctag" style="background:${b2.bg}22;border-color:${b2.bg};color:${b2.tc};cursor:pointer" onclick="clickNode('${n.id}')">${n.name.split("—")[0].split("(")[0].trim()}</span>`;
+  }).join("");
+  const ua=document.getElementById("purl");
+  if(d.url&&d.url.includes(".")){ua.href="https://"+d.url.replace("https://","");ua.textContent="🔗 "+d.url;ua.style.display="block";}
+  else ua.style.display="none";
+  document.getElementById("pan").style.display="block";
+}
+
+function clickNode(id){
+  const d=NM[id];if(!d)return;
+  showPan(d);
+  const cids=new Set([id,...(adj[id]||[])]);
+  nd.classed("dm",n=>!cids.has(n.id));
+  lnk.classed("hl",l=>l.source.id===id||l.target.id===id);
+}
+
+nd.on("click",(e,d)=>{
+  e.stopPropagation();
+  clickNode(d.id);
+});
+
+svg.on("click",()=>{closePan();nd.classed("dm",false);lnk.classed("hl",false);});
+function closePan(){document.getElementById("pan").style.display="none";}
+
+function tog(btn){
+  const l=btn.dataset.l;
+  layerState[l]=!layerState[l];
+  btn.classList.toggle("off",!layerState[l]);
+  applyVis();
+}
+
+function applyVis(){
   nd.each(function(d){
-    const lines=d.lb.split("\n");
-    const el=d3.select(this);
-    const fs=d.r>22?9:8;
-    const lh=fs+2;
-    const th=(lines.length-1)*lh;
-    lines.forEach((line,i)=>{
-      el.append("text").attr("text-anchor","middle").attr("dy",`${-th/2+i*lh+fs*0.35}px`)
-        .attr("font-size",`${fs}px`).attr("fill","#e8f5e9").attr("font-weight",d.sub==="focus"?"700":"500")
-        .attr("pointer-events","none").text(line);
-    });
+    const show=layerState[d.l]&&matchSearch(d);
+    d3.select(this).style("display",show?"block":"none");
   });
-  const BC={focus:{bg:"#1565c0",tc:"#bbdefb",lb:"Focus Area"},outcome:{bg:"#283593",tc:"#c5cae9",lb:"DIT Outcome"},content:{bg:"#4527a0",tc:"#d1c4e9",lb:"Content Area"},cn:{bg:"#1b5e20",tc:"#c8e6c9",lb:"Carbon-Negative Material"},rg:{bg:"#2e7d32",tc:"#dcedc8",lb:"Regenerative Material"},ef:{bg:"#795548",tc:"#efebe9",lb:"Eco-Friendly Material"},fn_plants:{bg:"#B45309",tc:"#FEF3C7",lb:"First Nations — Native Plants"},fn_land:{bg:"#B45309",tc:"#FEF3C7",lb:"First Nations — Land & Biochar"},fn_textiles:{bg:"#B45309",tc:"#FEF3C7",lb:"First Nations — Textiles"},fn_botanicals:{bg:"#B45309",tc:"#FEF3C7",lb:"First Nations — Botanicals"},fn_design:{bg:"#B45309",tc:"#FEF3C7",lb:"First Nations — Design"},d:{bg:"#BF360C",tc:"#FFE0B2",lb:"Indigenous Designer"},org:{bg:"#00695c",tc:"#e0f2f1",lb:"Restoration Org"},};
-  function showPan(d){
-    const bc=BC[d.sub]||{bg:"#333",tc:"#eee",lb:d.l};
-    const bdg=document.getElementById("mpbadge");
-    bdg.textContent=bc.lb;bdg.style.background=bc.bg;bdg.style.color=bc.tc;
-    document.getElementById("mpname").textContent=d.name;
-    document.getElementById("mpdesc").textContent=d.desc;
-    let m="";
-    if(d.heritage)m+=`<div class="mpsec">Heritage / Country</div><p>${d.heritage}</p>`;
-    if(d.discipline)m+=`<div class="mpsec">Discipline</div><p>${d.discipline}</p>`;
-    if(d.lga)m+=`<div class="mpsec">Location / LGA</div><p>${d.lga}</p>`;
-    if(d.region)m+=`<div class="mpsec">Region</div><p>${d.region}</p>`;
-    if(d.supplier)m+=`<div class="mpsec">NSW Supplier</div><p>${d.supplier}</p>`;
-    document.getElementById("mpmeta").innerHTML=m;
-    const conns=(adj[d.id]||[]).map(id=>nm[id]).filter(Boolean);
-    document.getElementById("mpconn").innerHTML=conns.slice(0,9).map(n=>{const b2=BC[n.sub]||{bg:"#333",tc:"#eee"};return`<span class="mctag" style="background:${b2.bg}22;border-color:${b2.bg};color:${b2.tc}" onclick="window.mClickNode('${n.id}')">${n.name.split("—")[0].split("(")[0].trim()}</span>`;}).join("");
-    const ua=document.getElementById("mpurl");
-    if(d.url&&d.url.includes(".")){ua.href="https://"+d.url.replace("https://","");ua.textContent="🔗 "+d.url;ua.style.display="block";}else ua.style.display="none";
-    document.getElementById("mpan").style.display="block";
-  }
-  window.mClickNode=function(id){
-    const d=nm[id];if(!d)return;
-    showPan(d);
-    const cids=new Set([id,...(adj[id]||[])]);
-    nd.classed("mdm",n=>!cids.has(n.id));
-    lnk.classed("mhl",l=>l.source.id===id||l.target.id===id);
-  };
-  nd.on("click",(e,d)=>{e.stopPropagation();window.mClickNode(d.id);});
-  svg.on("click",()=>{mClosePan();nd.classed("mdm",false);lnk.classed("mhl",false);});
-  window._mnd=nd;window._mlnk=lnk;
-  sim.on("tick",()=>{
-    lnk.attr("x1",d=>d.source.x).attr("y1",d=>d.source.y).attr("x2",d=>d.target.x).attr("y2",d=>d.target.y);
-    nd.attr("transform",d=>`translate(${d.x},${d.y})`);
+  lnk.each(function(l){
+    const s=NM[l.source.id||l.source],t=NM[l.target.id||l.target];
+    const show=s&&t&&layerState[s.l]&&layerState[t.l]&&matchSearch(s)&&matchSearch(t);
+    d3.select(this).style("display",show?"block":"none");
   });
 }
 
-function mApplyVis(){
-  if(!window._mnd)return;
-  window._mnd.each(function(d){d3.select(this).style("display",mLS[d.l]&&mMatchS(d)?"block":"none");});
-  window._mlnk.each(function(l){const s=nm[l.source.id||l.source],t=nm[l.target.id||l.target];d3.select(this).style("display",s&&t&&mLS[s.l]&&mLS[t.l]&&mMatchS(s)&&mMatchS(t)?"block":"none");});
+function matchSearch(d){
+  if(!srchQ)return true;
+  const q=srchQ.toLowerCase();
+  return[d.name,d.lga,d.region,d.supplier,d.desc,d.heritage,d.discipline,d.lb]
+    .filter(Boolean).some(v=>v.toLowerCase().includes(q));
 }
-function mMatchS(d){if(!mSQ)return true;const q=mSQ.toLowerCase();return[d.name,d.lga,d.region,d.supplier,d.desc,d.heritage,d.discipline,d.lb].filter(Boolean).some(v=>v.toLowerCase().includes(q));}
-function mtog(btn){const l=btn.dataset.ml;mLS[l]=!mLS[l];btn.classList.toggle("off",!mLS[l]);mApplyVis();}
-function mSearch(v){mSQ=v.trim();mApplyVis();if(mSQ){const hits=MN.filter(n=>mLS[n.l]&&mMatchS(n));const hids=new Set(hits.map(n=>n.id));hits.forEach(n=>(adj[n.id]||[]).forEach(id=>hids.add(id)));window._mnd&&window._mnd.classed("mdm",n=>!hids.has(n.id));window._mlnk&&window._mlnk.classed("mhl",l=>hids.has(l.source.id)&&hids.has(l.target.id));}else{window._mnd&&window._mnd.classed("mdm",false);window._mlnk&&window._mlnk.classed("mhl",false);}}
-function mReset(){mSQ="";document.getElementById("msrch").value="";Object.keys(mLS).forEach(k=>mLS[k]=true);document.querySelectorAll(".mlb[data-ml]").forEach(b=>b.classList.remove("off"));window._mnd&&window._mnd.classed("mdm",false).style("display","block");window._mlnk&&window._mlnk.classed("mhl",false).style("display","block");mClosePan();}
-function mClosePan(){document.getElementById("mpan").style.display="none";}
 
-
-// ── PATHWAY BUILDER ──────────────────────────────────────────────────────────
-
-// LGA → node data mapping
-const LGA_DATA = {
-  gadigal: {
-    name: "City of Sydney — Gadigal Country",
-    scenario: "saltwater",
-    materials: ["m1","m4","m7","m8","m2"],
-    fn: ["fn3","fn4","fn14","fn12","fn2","fn28"],
-    orgs: ["r3","r4","r5"],
-    designers: ["d1","d2","d4","d6"],
-    country: "Gadigal (Eora Nation)",
-    water: "Sydney Harbour — where saltwater and freshwater meet. Oyster reef restoration active in harbour and Botany Bay.",
-    localAction: [
-      {name:"Sydney Harbour Federation Trust", url:"harbourtrust.gov.au", note:"Foreshore reserves on Gadigal Country — school excursions available"},
-      {name:"NSW DPI Oyster Reef Restoration", url:"marine.nsw.gov.au", note:"School education packages 2025. Aboriginal sea Country knowledge central."},
-      {name:"The Nature Conservancy — Botany Bay Reef", url:"natureaustralia.org.au", note:"Shellfish reef restoration — First Nations partnership model"},
-      {name:"City of Sydney Biodiversity Volunteering", url:"cityofsydney.nsw.gov.au", note:"Bushcare groups on Gadigal Country — student volunteering possible"},
-      {name:"IndigiGrow (Bidjigal Country)", url:"indigigrow.com.au", note:"Aboriginal-owned nursery, La Perouse — endangered Banksia Scrub specialist"},
-      {name:"Native Foodways", url:"nativefoodways.com.au", note:"First Nations food enterprise on Gadigal Land, Sydney CBD"},
-    ],
-    uniPartners: [
-      {name:"Prof. Reuben Bolt — USyd DVC Indigenous", contact:"dvciss@sydney.edu.au"},
-      {name:"Prof. Cathie Burgess — Learning from Country", contact:"cathie.burgess@sydney.edu.au"},
-      {name:"Dr Michael Mossman — Architecture USyd/UNSW", contact:"michael.mossman@sydney.edu.au"},
-    ]
-  },
-  randwick: {
-    name: "Randwick LGA — Bidjigal Country",
-    scenario: "saltwater",
-    materials: ["m1","m5","m7"],
-    fn: ["fn2","fn3"],
-    orgs: ["r3","r4"],
-    designers: ["d1","d4"],
-    country: "Bidjigal",
-    water: "Botany Bay and Randwick foreshore wetlands"
-  },
-  northern_beaches: {
-    name: "Northern Beaches LGA — Garigal Country",
-    scenario: "saltwater",
-    materials: ["m1","m5","m10"],
-    fn: ["fn4","fn1"],
-    orgs: ["r3"],
-    designers: ["d1","d2"],
-    country: "Garigal / Cammeraygal",
-    water: "Pittwater and Narrabeen Lagoon estuary"
-  },
-  georges_river: {
-    name: "Georges River LGA — Dharawal Country",
-    scenario: "freshwater",
-    materials: ["m1","m6","m7"],
-    fn: ["fn3","fn12"],
-    orgs: ["r3","r5"],
-    designers: ["d2","d7"],
-    country: "Dharawal",
-    water: "Georges River catchment and tidal wetlands"
-  },
-  sutherland: {
-    name: "Sutherland Shire LGA — Dharawal Country",
-    scenario: "saltwater",
-    materials: ["m1","m5","m10"],
-    fn: ["fn3","fn6"],
-    orgs: ["r5"],
-    designers: ["d2","d7"],
-    country: "Dharawal",
-    water: "Port Hacking, Woronora River and Royal National Park coastal rivers"
-  },
-  inner_west: {
-    name: "Inner West LGA — Gadigal / Wangal Country",
-    scenario: "city",
-    materials: ["m4","m6","m7","m13"],
-    fn: ["fn3","fn12","fn14"],
-    orgs: ["r3","r4"],
-    designers: ["d1","d2","d3"],
-    country: "Gadigal / Wangal",
-    water: "Parramatta River and Iron Cove wetlands"
-  },
-  penrith: {
-    name: "City of Penrith — Darug Country",
-    scenario: "freshwater",
-    materials: ["m1","m3","m8"],
-    fn: ["fn1","fn5","fn6"],
-    orgs: ["r3"],
-    designers: ["d4","d2"],
-    country: "Darug",
-    water: "Nepean River and Blue Mountains creek systems"
-  },
-  newcastle: {
-    name: "City of Newcastle — Awabakal Country",
-    scenario: "saltwater",
-    materials: ["m6","m5","m7"],
-    fn: ["fn3","fn12"],
-    orgs: ["r3"],
-    designers: ["d2","d6"],
-    country: "Awabakal",
-    water: "Hunter River estuary and Lake Macquarie"
-  },
-  lismore: {
-    name: "Lismore LGA — Bundjalung Country",
-    scenario: "freshwater",
-    materials: ["m1","m3","m5","m2"],
-    fn: ["fn6","fn5"],
-    orgs: ["r1","r7"],
-    designers: ["d2","d5"],
-    country: "Bundjalung",
-    water: "Richmond River and Wilsons River — site of major floods and restoration"
-  },
-  byron: {
-    name: "Byron Shire LGA — Bundjalung Country",
-    scenario: "saltwater",
-    materials: ["m1","m3","m5"],
-    fn: ["fn6","fn5"],
-    orgs: ["r7"],
-    designers: ["d2"],
-    country: "Bundjalung",
-    water: "Brunswick River and Brunswick Heads estuary"
-  },
-  wagga: {
-    name: "Wagga Wagga LGA — Wiradjuri Country",
-    scenario: "freshwater",
-    materials: ["m8","m1","m10"],
-    fn: ["fn5","fn6"],
-    orgs: ["r6"],
-    designers: ["d3","d4","d5"],
-    country: "Wiradjuri",
-    water: "Murrumbidgee River — longest waterway on Country"
-  },
-  midcoast: {
-    name: "MidCoast NSW — Biripi / Worimi Country",
-    scenario: "freshwater",
-    materials: ["m10","m7","m5"],
-    fn: ["fn5","fn6"],
-    orgs: ["r3"],
-    designers: ["d2"],
-    country: "Biripi / Worimi",
-    water: "Manning River and Wallis Lake estuaries"
-  },
-  albury: {
-    name: "Albury LGA — Wiradjuri Country",
-    scenario: "freshwater",
-    materials: ["m9","m8","m1"],
-    fn: ["fn5","fn6"],
-    orgs: ["r6"],
-    designers: ["d3","d5"],
-    country: "Wiradjuri",
-    water: "Murray River — boundary Country, great ecological and cultural significance"
-  },
-  ku_ring_gai: {
-    name: "Ku-ring-gai LGA — Darug / Guringai Country",
-    scenario: "land",
-    materials: ["m11","m1","m5"],
-    fn: ["fn1","fn3"],
-    orgs: ["r3"],
-    designers: ["d2","d7"],
-    country: "Darug / Guringai",
-    water: "Lane Cove River headwaters and Ku-ring-gai Chase waterways"
-  },
-  other_nsw: {
-    name: "Your LGA — NSW Country",
-    scenario: null,
-    materials: ["m1","m5","m7"],
-    fn: ["fn12","fn6"],
-    orgs: ["r3"],
-    designers: ["d2"],
-    country: "Your local Country",
-    water: "Your local waterway — research its name and cultural significance"
-  }
-};
-
-const SCENARIOS = {
-  saltwater: {
-    name: "🌊 Saltwater",
-    brief: "Design an eco-friendly device or installation that supports oyster reef restoration, mangrove regeneration, or foreshore habitat health in your local waterway.",
-    outcomes: ["o1","o2","o6","o8"]
-  },
-  freshwater: {
-    name: "💧 Fresh Water",
-    brief: "Design a garment, object or system that tells the story of your local river system and advocates for its ecological health and cultural significance.",
-    outcomes: ["o1","o3","o6","o8"]
-  },
-  city: {
-    name: "🏙 City Edge",
-    brief: "Design a foreshore planter, habitat structure or urban installation that supports endemic plants, improves water filtration and reflects First Nations placemaking principles.",
-    outcomes: ["o1","o2","o6","o5"]
-  },
-  sky: {
-    name: "☁️ Sky Country",
-    brief: "Design a soundscape, biophilic instrument or weather installation that connects people to the seasonal and environmental rhythms of Country as observed from your local area.",
-    outcomes: ["o1","o3","o9","o5"]
-  },
-  land: {
-    name: "🌱 Land & Water",
-    brief: "Design a vessel, container or object that holds a story of the relationship between land and water on your local Country, using regenerative materials sourced within 100km.",
-    outcomes: ["o1","o6","o5","o8"]
-  }
-};
-
-function toggleBuilder(){
-  const panel = document.getElementById("builder-panel");
-  const wrap = document.getElementById("map-svg-wrap");
-  const btn = document.getElementById("builder-toggle");
-  const isOpen = panel.classList.contains("open");
-  if(isOpen){
-    panel.classList.remove("open");
-    wrap.classList.remove("shifted");
-    btn.style.background = "transparent";
-    btn.style.color = "#C17F24";
+function doSearch(val){
+  srchQ=val.trim();
+  applyVis();
+  if(srchQ){
+    const hits=NODES.filter(n=>layerState[n.l]&&matchSearch(n));
+    const hids=new Set(hits.map(n=>n.id));
+    hits.forEach(n=>(adj[n.id]||[]).forEach(id=>hids.add(id)));
+    nd.classed("dm",n=>!hids.has(n.id));
+    lnk.classed("hl",l=>hids.has(l.source.id)&&hids.has(l.target.id));
   } else {
-    panel.classList.add("open");
-    wrap.classList.add("shifted");
-    btn.style.background = "rgba(193,127,36,0.15)";
-    btn.style.color = "#FFD080";
+    nd.classed("dm",false);lnk.classed("hl",false);
   }
 }
 
-function bpOutcomeChange(){
-  // Live highlight matching nodes on map as user selects outcomes
-  const checked = Array.from(document.querySelectorAll(".bp-outcome input:checked")).map(i=>i.value);
-  if(!window._mnd) return;
-  if(checked.length === 0){
-    window._mnd.classed("mdm",false);
-    window._mlnk && window._mlnk.classed("mhl",false);
-    return;
-  }
-  const related = new Set(checked);
-  checked.forEach(id => { (adj[id]||[]).forEach(nid => related.add(nid)); });
-  window._mnd.classed("mdm", n => !related.has(n.id));
-  window._mlnk && window._mlnk.classed("mhl", l =>
-    related.has(l.source.id) && related.has(l.target.id)
-  );
+function resetAll(){
+  srchQ="";
+  document.getElementById("srch").value="";
+  Object.keys(layerState).forEach(k=>layerState[k]=true);
+  document.querySelectorAll(".lb[data-l]").forEach(b=>{b.classList.remove("off");});
+  nd.classed("dm",false).style("display","block");
+  lnk.classed("hl",false).style("display","block");
+  closePan();
 }
 
-function generateBrief(){
-  const lgaKey = document.getElementById("bp-lga").value;
-  const scenarioKey = document.getElementById("bp-scenario-sel").value;
-  const checkedOutcomes = Array.from(document.querySelectorAll(".bp-outcome input:checked")).map(i=>i.value);
-
-  if(!lgaKey){
-    alert("Please select your LGA first.");
-    return;
-  }
-
-  const lga = LGA_DATA[lgaKey];
-  if(!lga) return;
-
-  // Determine scenario
-  const sc = scenarioKey || lga.scenario || "saltwater";
-  const scenario = SCENARIOS[sc];
-
-  // Gather nodes
-  const matNodes = lga.materials.map(id => nm[id]).filter(Boolean);
-  const fnNodes  = lga.fn.map(id => nm[id]).filter(Boolean);
-  const orgNodes = lga.orgs.map(id => nm[id]).filter(Boolean);
-  const dNodes   = lga.designers.map(id => nm[id]).filter(Boolean);
-
-  // Highlight on map
-  const highlight = new Set([
-    ...lga.materials, ...lga.fn, ...lga.orgs, ...lga.designers,
-    ...checkedOutcomes,
-    ...(scenario ? scenario.outcomes : [])
-  ]);
-  highlight.forEach(id => { (adj[id]||[]).forEach(nid => highlight.add(nid)); });
-  if(window._mnd){
-    window._mnd.classed("mdm", n => !highlight.has(n.id));
-    window._mlnk && window._mlnk.classed("mhl", l =>
-      highlight.has(l.source.id) && highlight.has(l.target.id)
-    );
-  }
-
-  // Build result cards
-  let html = "";
-
-  // Scenario card
-  // Show local action orgs if available for this LGA
-  if(lga.localAction && lga.localAction.length){
-    html += \`<div style="margin-bottom:6px">
-      <div class="bp-card-type" style="color:#C17F24;margin-bottom:4px;">📍 Active on Country Right Now</div>\`;
-    lga.localAction.forEach(a => {
-      html += \`<div class="bp-card" style="margin-bottom:6px;">
-        <div class="bp-card-name" style="font-size:11px;">\${a.name}</div>
-        <div class="bp-card-detail">\${a.note}</div>
-        <a class="bp-card-link" href="https://\${a.url}" target="_blank">🔗 \${a.url}</a>
-      </div>\`;
-    });
-    html += \`</div><div class="bp-divider"></div>\`;
-  }
-
-  html += \`<div class="bp-scenario">\`
-    <div class="bp-scenario-label">Suggested Two Rivers Scenario</div>
-    <div class="bp-scenario-name">${scenario.name}</div>
-    <div class="bp-scenario-desc">${scenario.brief}</div>
-    <div style="margin-top:6px;font-size:9px;color:rgba(193,127,36,0.8);font-family:'DM Sans',sans-serif;">📍 ${lga.water}</div>
-  </div>`;
-
-  // Country note
-  html += `<div style="font-size:10px;color:rgba(200,230,201,0.5);font-family:'DM Sans',sans-serif;padding:2px 0 6px;">
-    You are designing on <strong style="color:#7dd4a8;">${lga.country} Country</strong>. Research this Country's history, custodians and ecological knowledge before students begin designing.
-  </div>`;
-
-  html += `<div class="bp-divider"></div>`;
-
-  // Materials
-  if(matNodes.length){
-    html += `<div class="bp-card-type" style="color:#81c784;">🌱 Regenerative Materials — closest to your LGA</div>`;
-    matNodes.slice(0,3).forEach(n => {
-      html += `<div class="bp-card">
-        <div class="bp-card-name">${n.name}</div>
-        <div class="bp-card-detail">${n.supplier||""}</div>
-        ${n.url?`<a class="bp-card-link" href="https://${n.url}" target="_blank">🔗 ${n.url}</a>`:""}
-      </div>`;
-    });
-    html += `<div class="bp-divider"></div>`;
-  }
-
-  // First Nations businesses
-  if(fnNodes.length){
-    html += `<div class="bp-card-type" style="color:#FFB74D;">🤝 First Nations Businesses — connected to your region</div>`;
-    fnNodes.slice(0,2).forEach(n => {
-      html += `<div class="bp-card">
-        <div class="bp-card-name">${n.name}</div>
-        <div class="bp-card-detail">${n.heritage||n.lga||""}</div>
-        ${n.url?`<a class="bp-card-link" href="https://${n.url}" target="_blank">🔗 ${n.url}</a>`:""}
-      </div>`;
-    });
-    html += `<div class="bp-divider"></div>`;
-  }
-
-  // Restoration orgs
-  if(orgNodes.length){
-    html += `<div class="bp-card-type" style="color:#4DB6AC;">🌍 Restoration Orgs — doing real work on Country near you</div>`;
-    orgNodes.slice(0,2).forEach(n => {
-      html += `<div class="bp-card">
-        <div class="bp-card-name">${n.name}</div>
-        <div class="bp-card-detail">${n.lga||n.region||""}</div>
-        ${n.url?`<a class="bp-card-link" href="https://${n.url}" target="_blank">🔗 ${n.url}</a>`:""}
-      </div>`;
-    });
-    html += `<div class="bp-divider"></div>`;
-  }
-
-  // Designers
-  if(dNodes.length){
-    html += `<div class="bp-card-type" style="color:#FF8A65;">🎨 First Nations Designers — to research and learn from</div>`;
-    dNodes.slice(0,2).forEach(n => {
-      html += `<div class="bp-card">
-        <div class="bp-card-name">${n.name}</div>
-        <div class="bp-card-detail">${n.heritage||""} · ${n.discipline||""}</div>
-        ${n.url?`<a class="bp-card-link" href="https://${n.url}" target="_blank">🔗 ${n.url}</a>`:""}
-      </div>`;
-    });
-  }
-
-  // Show university partners if available
-  if(lga.uniPartners && lga.uniPartners.length){
-    html += \`<div class="bp-divider"></div><div class="bp-card-type" style="color:#9575cd;">🎓 University Partners on this Country</div>\`;
-    lga.uniPartners.forEach(u => {
-      html += \`<div class="bp-card">
-        <div class="bp-card-name" style="font-size:11px;">\${u.name}</div>
-        <div class="bp-card-detail">\${u.contact}</div>
-      </div>\`;
-    });
-  }
-
-  document.getElementById("bp-cards").innerHTML = html;
-  document.getElementById("bp-result-title").textContent = `Brief for ${lga.name}`;
-  const result = document.getElementById("bp-result");
-  result.classList.add("show");
-  result.scrollTop = 0;
-}
-
-function clearResult(){
-  document.getElementById("bp-result").classList.remove("show");
-  document.getElementById("bp-cards").innerHTML = "";
-  if(window._mnd){ window._mnd.classed("mdm",false); }
-  if(window._mlnk){ window._mlnk.classed("mhl",false); }
-  document.querySelectorAll(".bp-outcome input").forEach(i => i.checked = false);
-  document.getElementById("bp-lga").value = "";
-  document.getElementById("bp-scenario-sel").value = "";
-}
-
-// Init map on load
-if(document.readyState==='loading'){
-  document.addEventListener('DOMContentLoaded', initMap);
-} else {
-  initMap();
-}
+sim.on("tick",()=>{
+  lnk.attr("x1",d=>d.source.x).attr("y1",d=>d.source.y)
+     .attr("x2",d=>d.target.x).attr("y2",d=>d.target.y);
+  nd.attr("transform",d=>`translate(${d.x},${d.y})`);
+});
 </script>
 </body>
 </html>
