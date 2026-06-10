@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Two Waters Merge — Design Education </title>
+<title>Two Rivers Merge — Design Education on Country</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
 <style>
@@ -25,7 +25,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content
 .hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 70% 50%,rgba(26,92,110,0.25) 0%,transparent 60%),radial-gradient(ellipse 60% 80% at 20% 80%,rgba(45,80,22,0.3) 0%,transparent 50%),radial-gradient(ellipse 40% 40% at 80% 20%,rgba(193,127,36,0.12) 0%,transparent 50%);}
 .ripple{position:absolute;border-radius:50%;border:1px solid rgba(193,127,36,0.07);animation:ripple-out 8s ease-out infinite;}
 .ripple:nth-child(1){width:300px;height:300px;top:60%;left:65%;animation-delay:0s;}
-.ripple:nth-child(2){width:600px;height:600px;top:50%;left:60%;animation-delay:2.5s;}
+.ripple:nth-child(2){width:600px;height:620px;top:50%;left:60%;animation-delay:2.5s;}
 .ripple:nth-child(3){width:950px;height:950px;top:40%;left:55%;animation-delay:5s;}
 @keyframes ripple-out{0%{transform:translate(-50%,-50%) scale(0.6);opacity:0.5;}100%{transform:translate(-50%,-50%) scale(1.4);opacity:0;}}
 .hero-content{position:relative;z-index:2;max-width:700px;padding:120px 80px 80px;animation:fade-up 1.2s ease both;}
@@ -113,7 +113,7 @@ section{padding:100px 80px;}
 #map-leg{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:3px 12px 4px;background:#060e05;border-bottom:1px solid #1a3d25;}
 .mli{display:flex;align-items:center;gap:4px;font-size:9px;color:#6a9a7a;font-family:'DM Sans',sans-serif;}
 .mld{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
-#map-svg-wrap{width:100%;height:calc(600px - 58px);position:relative;}
+#map-svg-wrap{width:100%;height:530px;position:relative;}
 #map-svg-wrap svg{width:100%;height:100%;}
 .mlnk{stroke-opacity:0.22;stroke-width:1px;}
 .mlnk.mhl{stroke-opacity:0.9;stroke-width:2px;}
@@ -385,7 +385,7 @@ footer{background:var(--dark);padding:48px 80px;border-top:1px solid rgba(193,12
       <span style="font-size:9px;color:#2d5c3a;margin-left:auto;">Scroll to zoom · Drag · Click for details</span>
     </div>
     <div id="map-svg-wrap">
-      <svg id="msvg"></svg>
+      <svg id="msvg" style="width:100%;height:100%;"></svg>
       <div id="mpan">
         <button class="mxbtn" onclick="mClosePan()">×</button>
         <div id="mpbadge" class="mpbadge"></div>
@@ -533,6 +533,13 @@ const MN=[
 {id:"d9",l:"designer",sub:"d",lb:"Uncle Shane\nPhillips",name:"Uncle Shane Phillips — Tribal Warrior",heritage:"Eora Nation",discipline:"Community Leader / Cultural Cruises",lga:"Redfern / Gadigal Country",desc:"Aboriginal Cultural Cruises on Sydney Harbour. 240+ school engagement background. Australian of the Year Local Hero 2013.",url:"tribalwarrior.org",r:12,col:"#BF360C",str:"#FF8A65"},
 {id:"d10",l:"designer",sub:"d",lb:"William\nTrewlynn",name:"William Trewlynn — YarnnUp",heritage:"Nucoorilma / Anaiwan / Dunghutti",discipline:"Cultural Capability Training + Creative Design",lga:"Redfern / Gadigal Country",desc:"Cultural capability training (Aboriginal philosophy + neuroscience). RAP development. Creative agency. Tourism Australia Songlines 2025. Supply Nation registered.",url:"yarnnup.com.au",r:12,col:"#BF360C",str:"#FF8A65"},
 
+// ── ADDITIONAL NODES (session 3) ─────────────────────────────────────────────
+{id:"fn28",l:"fn",sub:"fn_design",lb:"Alison\nPage",name:"Alison Page Design",desc:"Walbanga & Wadi Wadi woman. Creating Indigenous Institute for Designing with Country at UTS. Active Gadigal Country projects: Circular Quay, White Bay, Gadigal Station (Return of the Gadi Reed 2026), New Fish Markets. Co-author 'Design: Building on Country' (Thames & Hudson).",heritage:"Walbanga & Wadi Wadi (NSW South Coast)",lga:"NSW / Gadigal Country",url:"alisonpage.com.au",r:15,col:"#B45309",str:"#FFB74D"},
+{id:"r10",l:"org",sub:"org",lb:"Sydney Harbour\nFed. Trust",name:"Sydney Harbour Federation Trust",desc:"Manages foreshore reserves on Gadigal Country — Cockatoo Island/Wareamah, Middle Head, North Head. Partners with Babana Aboriginal Men's Group. School excursion programs. 2025-2029 Corporate Plan embeds cultural heritage as core work.",lga:"Sydney Harbour — multiple Gadigal Country sites",region:"Sydney Harbour NSW",url:"harbourtrust.gov.au",r:13,col:"#00695c",str:"#4DB6AC"},
+{id:"r11",l:"org",sub:"org",lb:"NSW DPI\nOyster Reefs",name:"NSW DPI — Oyster Reef Restoration",desc:"Active oyster reef restoration Sydney Harbour and Botany Bay. Three school education packages in development (2025). Virtual excursion + teacher PD delivered August 2025. Aboriginal sea Country knowledge central — 65,000 years of aquaculture design knowledge.",lga:"Sydney Harbour + Botany Bay (Gadigal/Bidjigal Country)",region:"Sydney NSW",url:"marine.nsw.gov.au",r:13,col:"#00695c",str:"#4DB6AC"},
+{id:"r12",l:"org",sub:"org",lb:"SEED\nClimate",name:"SEED Indigenous Youth Climate Network",desc:"Australia's First Nations youth-led climate justice organisation. New schools program 'Forming the Foundations'. Young Aboriginal and TSI people leading work to protect Country. Partnership not competition — Two Waters is the mandated curriculum pathway that delivers what SEED builds toward.",lga:"National",region:"National",url:"seedmob.org.au",r:12,col:"#00695c",str:"#4DB6AC"},
+{id:"r13",l:"org",sub:"org",lb:"ACE Hub\nCircular",name:"Australian Circular Economy Hub (ACE Hub)",desc:"Australia's leading national platform for circular economy — a Planet Ark initiative. Case study library, Circularity Live annual conference, RMIT University partnership. Directly supports DIT5-MAT-01 circular economy content. Two Waters is the mandated secondary school activation pathway for CE thinking.",lga:"National (Sydney HQ)",region:"National",url:"acehub.org.au",r:12,col:"#00695c",str:"#4DB6AC"},
+
 const ML=[
 {s:"fa1",t:"o1"},{s:"fa1",t:"o2"},{s:"fa1",t:"o3"},
 {s:"fa2",t:"o4"},{s:"fa2",t:"o3"},{s:"fa2",t:"o5"},{s:"fa2",t:"o6"},{s:"fa2",t:"o7"},{s:"fa2",t:"o2"},{s:"fa2",t:"o8"},
@@ -576,6 +583,19 @@ const ML=[
 {s:"r5",t:"o1"},{s:"r5",t:"c3"},{s:"r5",t:"c6"},
 {s:"r6",t:"o1"},{s:"r6",t:"c3"},{s:"r6",t:"c6"},
 {s:"r7",t:"o1"},{s:"r7",t:"c3"},{s:"r7",t:"c6"},
+
+// Session 3 new links
+{s:"fn28",t:"o1"},{s:"fn28",t:"o2"},{s:"fn28",t:"c1"},{s:"fn28",t:"c7"},{s:"fn28",t:"o6"},
+{s:"r10",t:"o1"},{s:"r10",t:"o2"},{s:"r10",t:"c3"},{s:"r10",t:"c7"},
+{s:"r11",t:"o1"},{s:"r11",t:"o6"},{s:"r11",t:"c7"},{s:"r11",t:"c3"},
+{s:"r12",t:"o1"},{s:"r12",t:"o2"},{s:"r12",t:"c1"},{s:"r12",t:"c3"},
+{s:"r13",t:"o6"},{s:"r13",t:"o8"},{s:"r13",t:"c3"},{s:"r13",t:"c2"},
+// Cross-links
+{s:"fn28",t:"fn19"},{s:"fn28",t:"c9"},
+{s:"r10",t:"r11"},{s:"r11",t:"r8"},
+{s:"r11",t:"m2"},{s:"r12",t:"r11"},
+{s:"r13",t:"m1"},{s:"r13",t:"m2"},{s:"r13",t:"m4"},
+
 // New node links
 {s:"fn26",t:"o1"},{s:"fn26",t:"o3"},{s:"fn26",t:"c1"},{s:"fn26",t:"c2"},
 {s:"fn27",t:"o1"},{s:"fn27",t:"o2"},{s:"fn27",t:"c1"},{s:"fn27",t:"c7"},
@@ -696,7 +716,7 @@ const LGA_DATA = {
     name: "City of Sydney — Gadigal Country",
     scenario: "saltwater",
     materials: ["m1","m4","m7","m8","m2"],
-    fn: ["fn3","fn4","fn14","fn12","fn2"],
+    fn: ["fn3","fn4","fn14","fn12","fn2","fn28"],
     orgs: ["r3","r4","r5"],
     designers: ["d1","d2","d4","d6"],
     country: "Gadigal (Eora Nation)",
@@ -1068,11 +1088,12 @@ function clearResult(){
   document.getElementById("bp-scenario-sel").value = "";
 }
 
-// Init map when section scrolls into view
-const mapObs=new IntersectionObserver((entries)=>{
-  if(entries[0].isIntersecting){initMap();mapObs.disconnect();}
-},{threshold:0.1});
-mapObs.observe(document.getElementById("map-container"));
+// Init map on load
+if(document.readyState==='loading'){
+  document.addEventListener('DOMContentLoaded', initMap);
+} else {
+  initMap();
+}
 </script>
 </body>
 </html>
